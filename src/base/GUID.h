@@ -37,6 +37,8 @@ public:
 
     CGUID& operator = (const CGUID& other);
 
+    static CGUID GUID_INVALID;
+
     size_type       size() const    {return sizeof(*this); }
     byte*           data()          { return reinterpret_cast<byte*>(this); }
     const byte*     data() const    { return reinterpret_cast<const byte*>(this); }

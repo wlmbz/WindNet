@@ -4,6 +4,8 @@
 #include "logging.h"
 
 
+CGUID CGUID::GUID_INVALID;
+
 CGUID::CGUID()
 {
     memset(this, 0, sizeof(*this));
