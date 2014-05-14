@@ -54,7 +54,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <SmallerTypeCheck>true</SmallerTypeCheck>
@@ -66,7 +66,7 @@
       <ProgramDataBaseFileName>$(OutDir)libNet.pdb</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>DEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   <Lib>
@@ -81,7 +81,7 @@
     <ClCompile>
       <Optimization>Full</Optimization>
       <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -92,7 +92,7 @@
       <ProgramDataBaseFileName>$(OutDir)libNet.pdb</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   <Lib>
@@ -110,6 +110,7 @@
     <ClInclude Include="..\src\base\GUID.h" />
     <ClInclude Include="..\src\base\logging.h" />
     <ClInclude Include="..\src\base\utils.h" />
+    <ClInclude Include="..\src\io\Crc32Static.h" />
     <ClInclude Include="..\src\io\DataBlock.h" />
     <ClInclude Include="..\src\io\DataBlockAllocator.h" />
     <ClInclude Include="..\src\io\DataBlockSetWriteRead.h" />
@@ -118,7 +119,6 @@
     <ClInclude Include="..\src\io\ReadWrite.h" />
     <ClInclude Include="..\src\net\BaseMessage.h" />
     <ClInclude Include="..\src\net\Clients.h" />
-    <ClInclude Include="..\src\net\ConClient.h" />
     <ClInclude Include="..\src\net\MapFile.h" />
     <ClInclude Include="..\src\net\MemClient.h" />
     <ClInclude Include="..\src\net\MemServer.h" />
@@ -132,6 +132,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\base\GUID.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\io\Crc32Static.cpp">
     </ClCompile>
     <ClCompile Include="..\src\io\DataBlock.cpp">
     </ClCompile>
@@ -148,8 +150,6 @@
     <ClCompile Include="..\src\net\BaseMessage.cpp">
     </ClCompile>
     <ClCompile Include="..\src\net\Clients.cpp">
-    </ClCompile>
-    <ClCompile Include="..\src\net\ConClient.cpp">
     </ClCompile>
     <ClCompile Include="..\src\net\MapFile.cpp">
     </ClCompile>

@@ -29,6 +29,7 @@ solution 'WindNet'
             "WIN32_LEAN_AND_MEAN",
             "_WIN32_WINNT=0x0600",
             "_SCL_SECURE_NO_WARNINGS",
+            "_CRT_SECURE_NO_WARNINGS",
         }
         files 
         {
@@ -57,7 +58,8 @@ solution 'WindNet'
             "NOMINMAX",
             "WIN32_LEAN_AND_MEAN",
             "_WIN32_WINNT=0x0600",
-            "_SCL_SECURE_NO_WARNINGS",        
+            "_SCL_SECURE_NO_WARNINGS",
+            "_CRT_SECURE_NO_WARNINGS",
         }
         
         files 

@@ -2,16 +2,16 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="src">
-      <UniqueIdentifier>{12F81F2A-AA33-8B44-BF60-DB331787AAEC}</UniqueIdentifier>
+      <UniqueIdentifier>{55D0BCD8-36F2-F64D-B6EF-E25B40DEE75C}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\base">
-      <UniqueIdentifier>{D3B65379-B2B1-114D-8206-E2EB0997CAD1}</UniqueIdentifier>
+      <UniqueIdentifier>{0A78EC1C-FD54-8047-916C-6E20E39D3BAA}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\io">
-      <UniqueIdentifier>{6898B527-C6EC-774B-AF1E-2EE71EF8C0D9}</UniqueIdentifier>
+      <UniqueIdentifier>{2E017968-E2B3-5741-A754-60ED3476E1E6}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\net">
-      <UniqueIdentifier>{DEB99B03-AE4D-1F43-A1E1-EC15FC912486}</UniqueIdentifier>
+      <UniqueIdentifier>{3C693F08-1375-7B43-81C1-AA280956C8BD}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -26,6 +26,9 @@
     </ClInclude>
     <ClInclude Include="..\src\base\utils.h">
       <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\io\Crc32Static.h">
+      <Filter>src\io</Filter>
     </ClInclude>
     <ClInclude Include="..\src\io\DataBlock.h">
       <Filter>src\io</Filter>
@@ -49,9 +52,6 @@
       <Filter>src\net</Filter>
     </ClInclude>
     <ClInclude Include="..\src\net\Clients.h">
-      <Filter>src\net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\net\ConClient.h">
       <Filter>src\net</Filter>
     </ClInclude>
     <ClInclude Include="..\src\net\MapFile.h">
@@ -89,6 +89,9 @@
     <ClCompile Include="..\src\base\GUID.cpp">
       <Filter>src\base</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\io\Crc32Static.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\io\DataBlock.cpp">
       <Filter>src\io</Filter>
     </ClCompile>
@@ -111,9 +114,6 @@
       <Filter>src\net</Filter>
     </ClCompile>
     <ClCompile Include="..\src\net\Clients.cpp">
-      <Filter>src\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\net\ConClient.cpp">
       <Filter>src\net</Filter>
     </ClCompile>
     <ClCompile Include="..\src\net\MapFile.cpp">
