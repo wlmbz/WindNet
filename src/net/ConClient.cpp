@@ -13,7 +13,10 @@
 #include "ConClient.h"
 #include "Servers.h"
 #include "basemessage.h"
-#include "../PUBLIC/Crc32Static.h"
+#include "io/Crc32Static.h"
+
+using namespace std;
+
 
 CConClient::CConClient(CServer*	pServers)
 :m_pServers(pServers)

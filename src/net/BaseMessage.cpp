@@ -17,19 +17,17 @@
 
 #include "Basemessage.h"
 #include "MsgCry.h"
+#include "base/logging.h"
+#include "base/utils.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+using namespace std;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
 CDataBlockAllocator* CBaseMessage::m_pDBAllocator = NULL;
-set<CBaseMessage*>	CBaseMessage::TestMsg;
+std::set<CBaseMessage*>	CBaseMessage::TestMsg;
 
 ulong CBaseMessage::m_nMaxFreeMsgNum = 0;
 CBaseMessage::listBaseMsgs CBaseMessage::m_FreeBaseMessages;
@@ -86,7 +84,7 @@ void CBaseMessage::Init(unsigned long type)
     Add((BYTE*)&st, sizeof(stMsg));
 }
 
-void CBaseMessage::Init(vector<CDataBlock*>& MsgData, const unsigned char kn[16][6], bool bDecrypt)
+void CBaseMessage::Init(std::vector<CDataBlock*>& MsgData, const unsigned char kn[16][6], bool bDecrypt)
 {
     m_lNetFlag = 0;
     m_lPriorityLvl = MAX_MSG_PRIO;
@@ -124,7 +122,7 @@ void CBaseMessage::Init(vector<CDataBlock*>& MsgData, const unsigned char kn[16]
     }
     else
     {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"严重错误,初始化消息的时候,数据为空!");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"严重错误,初始化消息的时候,数据为空!");
     }
 }
 
@@ -158,10 +156,10 @@ void CBaseMessage::Clone(CBaseMessage *pMsg)
         //默认所有的消息块一样大
         CDataBlock *pSourDB = (*it);
         CDataBlock *pDestDB =  m_pDBAllocator->AllocDB(2);
-        int minsize = min(pSourDB->GetCurSize(),pDestDB->GetMaxSize());
+        int minsize = std::min(pSourDB->GetCurSize(), pDestDB->GetMaxSize());
         if(minsize < pSourDB->GetCurSize())
         {
-            Log4c::Warn(NET_MODULE,"在函数CBaseMessage::Clone()中，数据块大小不统一。");
+            LOG(WARNING) << "在函数CBaseMessage::Clone()中，数据块大小不统一。";
         }
         memcpy(pDestDB->Base(),pSourDB->Base(),minsize);
         pDestDB->SetCurSize(minsize);
@@ -182,7 +180,7 @@ void CBaseMessage::AddWrDataBlock()
     CDataBlock* pDB = CBaseMessage::m_pDBAllocator->AllocDB(3);
     if(pDB == NULL)
     {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数CBaseMessage::AddWrDataBlock()中， 分配数据块出错。");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数CBaseMessage::AddWrDataBlock()中， 分配数据块出错。");
         return;
     }
 
@@ -359,7 +357,7 @@ void CBaseMessage::Add(BYTE* pBuf, ulong size)
         else
         {
             size = 0;
-            PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数CBaseMessage::Add()中， 压数据出错。");
+            //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数CBaseMessage::Add()中， 压数据出错。");
         }
     }
     SetSize(GetSize()+lTempSize);
@@ -487,7 +485,7 @@ void* CBaseMessage::Get(BYTE* pBuf, ulong size)
         else
         {
             size = 0;
-            PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数CBaseMessage::Get()中， 得数据出错。");
+            //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数CBaseMessage::Get()中， 得数据出错。");
         }
     }
 

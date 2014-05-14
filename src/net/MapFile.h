@@ -11,10 +11,11 @@
 */
 //=============================================================================
 
-#ifndef __MAP_FILE_H__
-#define __MAP_FILE_H__
 #pragma once
 
+#include <stdio.h>
+#include <map>
+#include <string>
 #include "MsgQueue.h"
 
 class CDataBlock;
@@ -60,12 +61,12 @@ struct tagFileInfo0x
 	{
 	}
 
-	string strFileName;		// 文件路径
+    std::string strFileName;		// 文件路径
 	DWORD dwLastWriteTime;	// 最后一次操作时间
 	FILE* pFile;			// 文件句柄
 };
 
-typedef map<string, tagFileInfo0x*> MAP_FILES;
+typedef std::map<std::string, tagFileInfo0x*> MAP_FILES;
 typedef MAP_FILES::iterator ITR_MAP_FILE;
 
 class CMapFile
@@ -157,4 +158,3 @@ public:
 	const char* GetCurDir(void);
 };
 
-#endif

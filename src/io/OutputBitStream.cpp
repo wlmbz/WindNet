@@ -1,4 +1,3 @@
-#include "StdAfx.h"
 #include "OutputBitStream.h"
 
 OutputBitStream::OutputBitStream(void)

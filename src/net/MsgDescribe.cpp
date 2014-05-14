@@ -1,5 +1,9 @@
 #include "MsgDescribe.h"
+#include <assert.h>
+#include <fstream>
+#include "base/utils.h"
 
+using namespace std;
 
 CMsgDescribe* CMsgDescribe::g_pMsgDesc = NULL;
 
@@ -51,7 +55,7 @@ const CHAR* CMsgDescribe::GetDesc( ulong dwID )
 	map<ulong, string>::iterator itRet = m_mapMsg.find( dwID );
 	if( itRet == m_mapMsg.end() )
 	{
-		sprintf( szID, "%d", dwID );
+		sprintf_s( szID, 32, "%d", dwID );
 		return szID;
 	}
 	else

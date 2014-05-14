@@ -9,12 +9,14 @@
  *	Datae:2007-6-11
  */
 //=============================================================================
-#ifndef __CONCLIENT__H__
-#define __CONCLIENT__H__
+
 #pragma once
 
-class CServer;
+
+
 #include "mysocket.h"
+
+class CServer;
 
 class CConClient :
 	public CMySocket
@@ -78,5 +80,3 @@ public:
 
 	CBaseMessage* CreateMsg(void* pBuf, unsigned long nSize);
 };
-
-#endif

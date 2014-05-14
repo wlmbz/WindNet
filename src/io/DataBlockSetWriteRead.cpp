@@ -12,12 +12,12 @@
 //=============================================================================
 
 
-#include "StdAfx.h"
 #include "DataBlockSetWriteRead.h"
-
 #include "DataBlock.h"
 #include "DataBlockAllocator.h"
+#include "base/logging.h"
 
+using namespace std;
 	// 添加数据
 void tagDataBlockWriteSet::AddToByteArray(void* pSource, long n)
 {
@@ -35,7 +35,7 @@ void tagDataBlockWriteSet::AddToByteArray(const char* pStr)
 void tagDataBlockWriteSet::AddToByteArray(const CGUID& guid)
 {
 	long size = sizeof(CGUID);
-	if(guid == CGUID::GUID_INVALID)
+	if(guid.is_nil())
 	{
 		size = 0;
 	}
@@ -72,9 +72,7 @@ void tagDataBlockWriteSet::AddWrDataBlock()
 	CDataBlock* pDB = pDBAllocator->AllocDB(2000);
 	if(pDB == NULL)
 	{
-		//PutStringToFile("Net","在函数tagDataBlockWriteSet::AddWrDataBlock()中， 分配数据块出错。");
-
-        Log4c::Warn(ROOT_MODULE,"在函数tagDataBlockWriteSet::AddWrDataBlock()中， 分配数据块出错。");
+        LOG(WARNING) << "在函数tagDataBlockWriteSet::AddWrDataBlock()中， 分配数据块出错。";
 		return;
 	}
 	pDataSet->push_back(pDB);
@@ -141,7 +139,7 @@ void* tagDataBlockReadSet::GetBuff(uchar* pByte, long size)
 		{
 			size = 0;
 			//PutStringToFile("Net","在函数tagDataBlockReadSet::GetBuff(()中， 得数据出错。");
-            Log4c::Warn(ROOT_MODULE,"在函数tagDataBlockReadSet::GetBuff(()中， 得数据出错。");
+            LOG(WARNING) << "在函数tagDataBlockReadSet::GetBuff(()中， 得数据出错。";
 		}
 	}
 	/*PutStringToFile("Net","Get(...) 结束!");*/

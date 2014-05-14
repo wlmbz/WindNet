@@ -12,18 +12,11 @@
  */
 //=============================================================================
 
-
-
-#include "mmsystem.h"
 #include "MySocket.h"
 #include "MsgDescribe.h"
 #include "MsgCry.h"
+#include <assert.h>
 
-
-
-
-#pragma comment(lib, "ws2_32.lib")
-#pragma comment(lib, "winmm.lib")
 
 /// 默认所有通信无需加密
 long CMySocket::s_lEncryptType = 0;
@@ -38,13 +31,13 @@ bool CMySocket::MySocketInit()
 	int nResult = WSAStartup(wVersionRequested, &wsaData);
 	if (nResult != 0)
 	{
-		PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"WSAStartup Failed!");
+		//PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"WSAStartup Failed!");
 		return FALSE;
 	}
 
 	if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 0)
 	{
-		PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"Is not Winsock 2.0!");
+		//PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"Is not Winsock 2.0!");
 		WSACleanup();
 		return FALSE;
 	}
@@ -105,13 +98,13 @@ bool CMySocket::Create(UINT nSocketPort,			// 端口
 	m_hSocket = socket(PF_INET, nSocketType, 0);	// 初始化套接字
 	if( m_hSocket == INVALID_SOCKET )
 	{
-        PutErrorString(NET_MODULE,"%-15s Create Socket Error = %d",__FUNCTION__,WSAGetLastError());
+        //PutErrorString(NET_MODULE,"%-15s Create Socket Error = %d",__FUNCTION__,WSAGetLastError());
 		return FALSE;
 	}
 
 	if( !Bind(nSocketPort, lpszSocketAddress) )	// 绑定端口和地址
 	{
-        PutErrorString(NET_MODULE,"%-15s Create Socket Bind Error = %d",__FUNCTION__,WSAGetLastError());
+        //PutErrorString(NET_MODULE,"%-15s Create Socket Bind Error = %d",__FUNCTION__,WSAGetLastError());
 		return FALSE;
 	}
 	return TRUE;
@@ -128,14 +121,14 @@ bool CMySocket::CreateEx(UINT nSocketPort,LPCTSTR lpszSocketAddress,int nSocketT
 	//创建出错
 	if(m_hSocket == INVALID_SOCKET)
 	{
-        PutErrorString(NET_MODULE,"%-15s CreateEx Socket Error = %d",__FUNCTION__,WSAGetLastError());
+        //PutErrorString(NET_MODULE,"%-15s CreateEx Socket Error = %d",__FUNCTION__,WSAGetLastError());
 		return FALSE;
 	}
 
 	//邦定端口和地址
 	if(!Bind(nSocketPort, lpszSocketAddress))
 	{
-        PutErrorString(NET_MODULE,"%-15s CreateEx Socket Bind Error = %d",__FUNCTION__,WSAGetLastError());
+        //PutErrorString(NET_MODULE,"%-15s CreateEx Socket Bind Error = %d",__FUNCTION__,WSAGetLastError());
 		return FALSE;
 	}
 	return TRUE;
@@ -171,7 +164,7 @@ bool CMySocket::Bind(UINT nSocketPort, LPCTSTR lpszSocketAddress)
 	long hr = bind(m_hSocket, (SOCKADDR*)&sockAddr, sizeof(sockAddr));
 	if(  hr == SOCKET_ERROR )
 	{
-        PutErrorString(NET_MODULE,"%-15s Bind Error = %d",__FUNCTION__,WSAGetLastError());
+        //PutErrorString(NET_MODULE,"%-15s Bind Error = %d",__FUNCTION__,WSAGetLastError());
 		return FALSE;
 	}
 	return TRUE;
@@ -187,7 +180,7 @@ void CMySocket::SetSocketOpt()
 	int hr = setsockopt(m_hSocket,IPPROTO_TCP,TCP_NODELAY,(char *)&bNodelay,sizeof(bNodelay));//不采用延时算法 
 	if(  hr == SOCKET_ERROR )
 	{
-        PutErrorString(NET_MODULE,"%-15s Disables the Nagle algorithm Error = %d",__FUNCTION__,WSAGetLastError());
+        //PutErrorString(NET_MODULE,"%-15s Disables the Nagle algorithm Error = %d",__FUNCTION__,WSAGetLastError());
 	}
 	return;
 }
@@ -201,7 +194,7 @@ void CMySocket::SetHostName()
 	SOCKADDR_IN sockAddr;
 	if(SOCKET_ERROR ==gethostname(strName, 128))
 	{
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,WSAGetLastError());
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,WSAGetLastError());
 		return;
 	}
 	LPHOSTENT lphost;
@@ -246,7 +239,7 @@ bool CMySocket::ShutDown()
 	{
 		if( shutdown(m_hSocket,SD_SEND)== SOCKET_ERROR)
 		{
-            PutErrorString(NET_MODULE,"%-15sshutdown() Error = %d",__FUNCTION__,WSAGetLastError());
+            //PutErrorString(NET_MODULE,"%-15sshutdown() Error = %d",__FUNCTION__,WSAGetLastError());
 		}
 	}
 	m_bShutDown = true;
@@ -268,7 +261,7 @@ int CMySocket::Recv(void* lpBuf, int nBufLen, int nFlags)
 		long error = WSAGetLastError();
 		if( error != WSAEWOULDBLOCK )
 		{
-            PutErrorString(NET_MODULE,"%-15s 读取错误%d",__FUNCTION__,error);
+            //PutErrorString(NET_MODULE,"%-15s 读取错误%d",__FUNCTION__,error);
 		}
 	}
 	return rt;
@@ -295,7 +288,7 @@ int CMySocket::RecvFrom(void* lpBuf, int nBufLen, char* strIP, ulong& dwPort, in
 		{
 			return 0;
 		}
-        PutErrorString(NET_MODULE,"%-15s Socket RecvFrom Error = %d",__FUNCTION__,error);
+        //PutErrorString(NET_MODULE,"%-15s Socket RecvFrom Error = %d",__FUNCTION__,error);
 		return FALSE;
 	}
 

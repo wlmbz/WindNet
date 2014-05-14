@@ -14,12 +14,14 @@
 //=============================================================================
 
 
-#include "mmsystem.h"
 #include "Servers.h"
-#include "Mysocket.h"
+#include <time.h>
+#include <mmsystem.h>
+#include <process.h>
 #include "serverClient.h"
 #include "BaseMessage.h"
-#include <time.h>
+#include "base/utils.h"
+
 
 
 //////////////////////////////////////////////////////////////////////
@@ -146,7 +148,7 @@ bool	CServer::Start(BYTE bMode,CDataBlockAllocator* pDBAllocator,
     //创建完成端口失败
     if(m_hCompletionPort==NULL)
     {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"创建完成端口失败!");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"创建完成端口失败!");
         return false;
     }
 
@@ -154,7 +156,7 @@ bool	CServer::Start(BYTE bMode,CDataBlockAllocator* pDBAllocator,
     bool bRet = CreateNetMainThread();
     if(!bRet)
     {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"创建网络主线程失败!");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"创建网络主线程失败!");
         return false;
     }
 
@@ -162,7 +164,7 @@ bool	CServer::Start(BYTE bMode,CDataBlockAllocator* pDBAllocator,
     bRet=CreateWorkerThreads(sysInfo.dwNumberOfProcessors);	
     if(!bRet)
     {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"创建工作线程失败!");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"创建工作线程失败!");
         return false;
     }
     //客户端方式启动
@@ -199,7 +201,7 @@ bool CServer::Host(UINT dwPort, const char* strIP,long lFlag, ulong nSocketType)
     bRet=CreateAcceptThread();
     if(!bRet)
     {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"创建接受连接线程失败!");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"创建接受连接线程失败!");
 
         return FALSE;
     }
@@ -208,7 +210,7 @@ bool CServer::Host(UINT dwPort, const char* strIP,long lFlag, ulong nSocketType)
     bRet = Listen(m_lMaxBlockConnetNum);
     if(!bRet)
     {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"listen 失败!");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"listen 失败!");
         return FALSE;
     }
     return bRet;
@@ -271,7 +273,7 @@ bool CServer::CreateWorkerThreads(int nProcNum)
             return FALSE;
     }
 
-    PutTraceString(NET_MODULE,"服务器创建%d个完成端口工作线程。",nProcNum);
+    //PutTraceString(NET_MODULE,"服务器创建%d个完成端口工作线程。",nProcNum);
     return TRUE;
 }
 
@@ -463,7 +465,7 @@ void CServer::OnAccept(int nErrorCode)
     if(m_lCurClientCount >= m_lMaxClientConNum)
     {
         closesocket(clientSocket);
-        PutTraceString(NET_MODULE,"the cur connect num(%d) greater the restrict num(%d)",m_lCurClientCount,m_lMaxClientConNum);
+        //PutTraceString(NET_MODULE,"the cur connect num(%d) greater the restrict num(%d)",m_lCurClientCount,m_lMaxClientConNum);
 
         return;
     }
@@ -472,7 +474,7 @@ void CServer::OnAccept(int nErrorCode)
     if(m_bCheck && FindForbidIP(stClientAddress.sin_addr.S_un.S_addr) == true)
     {
         closesocket(clientSocket);
-        Log4c::Warn(NET_MODULE,"the ip address(%d) has already forbided",stClientAddress.sin_addr.S_un.S_addr);
+        //Log4c::Warn(NET_MODULE,"the ip address(%d) has already forbided",stClientAddress.sin_addr.S_un.S_addr);
         return;
     }
 
@@ -480,7 +482,7 @@ void CServer::OnAccept(int nErrorCode)
     CServerClient* pServerClient=  AllocClient(true);
     if(NULL == pServerClient)
     {
-        Log4c::Warn(NET_MODULE,"erro, Don't allocate the 'serverclient' instance.！");
+        //Log4c::Warn(NET_MODULE,"erro, Don't allocate the 'serverclient' instance.！");
         closesocket(clientSocket);
         return;
     }
@@ -558,7 +560,7 @@ void CServer::OnError(PER_IO_OPERATION_DATA *pPerIOData,long lIndexID,int errorC
 
     if(errorCode != 64)
     {
-       PutTraceString(NET_MODULE,str);
+       //PutTraceString(NET_MODULE,str);
     }
 }
 
@@ -661,8 +663,8 @@ void CServer::OnReceive(PER_IO_OPERATION_DATA *pPerIOData,long lIndexID,long lRe
             //如果平均每秒接受的大小超过限制值,发出错误信息.断开
             if(pClient->GetCurRecvSizePerSecond() > pClient->GetMaxRecvSizePerSecond() )
             {				
-                Log4c::Warn(NET_MODULE,"erro,(SocketID:%d) the current rcv data size per-second(%d) greater the max value(%d),shutdown the socket!",
-                    lIndexID,pClient->GetCurRecvSizePerSecond(),pClient->GetMaxRecvSizePerSecond());
+                //Log4c::Warn(NET_MODULE,"erro,(SocketID:%d) the current rcv data size per-second(%d) greater the max value(%d),shutdown the socket!",
+                //    lIndexID,pClient->GetCurRecvSizePerSecond(),pClient->GetMaxRecvSizePerSecond());
                 //关闭
                 pClient->Close();;
             }
@@ -705,19 +707,19 @@ bool CServer::AssociateSocketWithCP(SOCKET socket,ulong dwCompletionKey)
 {
     if(m_hCompletionPort == NULL)
     {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数 CServer::AssociateSocketWithCP(...)里操作出错，完成端口句柄无效。");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数 CServer::AssociateSocketWithCP(...)里操作出错，完成端口句柄无效。");
         return false;
     }
     HANDLE hHanle = CreateIoCompletionPort((HANDLE)socket, m_hCompletionPort, dwCompletionKey, 0);
     if(hHanle == NULL)
     {
         ulong dwErrorID = GetLastError();
-        PutErrorString(NET_MODULE,"%-15s在函数 CServer::AssociateSocketWithCP(...)里.邦定一个Socket到完成端口出错(ErrorID:%d)",__FUNCTION__,dwErrorID);
+        //PutErrorString(NET_MODULE,"%-15s在函数 CServer::AssociateSocketWithCP(...)里.邦定一个Socket到完成端口出错(ErrorID:%d)",__FUNCTION__,dwErrorID);
         return false;
     }
     if(hHanle!= m_hCompletionPort)
     {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数 CServer::AssociateSocketWithCP(...)里操作出错，邦定SOCKET到完成端口的返回值出错。");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数 CServer::AssociateSocketWithCP(...)里操作出错，邦定SOCKET到完成端口的返回值出错。");
         return false;
     }
     return true;
@@ -923,34 +925,34 @@ void	CServer::OutputMsgStatInfo(ulong lIntelTime)
     dwLastTime = dwCurTiem;
 
     EnterCriticalSection(&m_CSMsgStat);
-    PutTraceString(NET_MODULE,"the send msgs info:");
+    //PutTraceString(NET_MODULE,"the send msgs info:");
     itMsgStat it = m_SendMsgsStat.begin();
     for(;it != m_SendMsgsStat.end();it++)
     {
-       PutTraceString(NET_MODULE,"msgType:%d,count:%d,totalsize:%d",(*it).first,(*it).second.lNum,(*it).second.lTotalSize);
+       //PutTraceString(NET_MODULE,"msgType:%d,count:%d,totalsize:%d",(*it).first,(*it).second.lNum,(*it).second.lTotalSize);
     }
     m_SendMsgsStat.clear();
 
-   PutTraceString(NET_MODULE,"the recv msgs info:");
+   //PutTraceString(NET_MODULE,"the recv msgs info:");
     it = m_RecvMsgsStat.begin();
     for(;it != m_RecvMsgsStat.end();it++)
     {
-        PutTraceString(NET_MODULE,"msgType:%d,count:%d,totalsize:%d",(*it).first,(*it).second.lNum,(*it).second.lTotalSize);
+        //PutTraceString(NET_MODULE,"msgType:%d,count:%d,totalsize:%d",(*it).first,(*it).second.lNum,(*it).second.lTotalSize);
     }
     m_RecvMsgsStat.clear();
 
-    PutTraceString(NET_MODULE,"the msgs send max len:");
+    //PutTraceString(NET_MODULE,"the msgs send max len:");
     itMaxMsgLen itMaxLen = m_SendMsgMaxLen.begin();
     for(;itMaxLen != m_SendMsgMaxLen.end();itMaxLen++)
     {
-        PutTraceString(NET_MODULE,"msgType:%d,maxLen:%d",(*itMaxLen).first,(*itMaxLen).second);
+        //PutTraceString(NET_MODULE,"msgType:%d,maxLen:%d",(*itMaxLen).first,(*itMaxLen).second);
     }
 
-    PutTraceString(NET_MODULE,"the msgs recv max len:");
+    //PutTraceString(NET_MODULE,"the msgs recv max len:");
     itMaxLen = m_RecvMsgMaxLen.begin();
     for(;itMaxLen != m_RecvMsgMaxLen.end();itMaxLen++)
     {
-        PutTraceString(NET_MODULE,"msgType:%d,maxLen:%d",(*itMaxLen).first,(*itMaxLen).second);
+        //PutTraceString(NET_MODULE,"msgType:%d,maxLen:%d",(*itMaxLen).first,(*itMaxLen).second);
     }
 
     LeaveCriticalSection(&m_CSMsgStat);
@@ -1052,7 +1054,7 @@ long CServer::Connect(LPCTSTR lpszHostAddress, UINT nHostPort,long lFlag,ulong d
 
     if( !pConClient->CreateEx(0,NULL,SOCK_STREAM) )
     {
-        PutErrorString(NET_MODULE,"%-15s Create socket bound to %s:%u FAILED, ERR_ID: %d.",__FUNCTION__, lpszHostAddress, nHostPort, GetLastError());
+        //PutErrorString(NET_MODULE,"%-15s Create socket bound to %s:%u FAILED, ERR_ID: %d.",__FUNCTION__, lpszHostAddress, nHostPort, GetLastError());
         return -1;
     }
 
@@ -1100,7 +1102,7 @@ long CServer::Connect(CServerClient* pConClient,LPCTSTR lpszHostAddress, UINT nH
     sockAddr.sin_addr.s_addr = inet_addr(lpszAscii);
     if (sockAddr.sin_addr.s_addr == INADDR_NONE)
     {
-        PutErrorString(NET_MODULE,"%-15s Given address %s:%u is INVALID, ERR_ID: %d.",__FUNCTION__, lpszHostAddress, nHostPort, GetLastError());
+        //PutErrorString(NET_MODULE,"%-15s Given address %s:%u is INVALID, ERR_ID: %d.",__FUNCTION__, lpszHostAddress, nHostPort, GetLastError());
         return FALSE;
     }
 
@@ -1127,7 +1129,7 @@ long CServer::Connect(CServerClient* pConClient,LPCTSTR lpszHostAddress, UINT nH
         int nRet = select(0,NULL,&writefd,NULL,&waittime);
         if(nRet == 0 || nRet == SOCKET_ERROR)
         {
-            PutErrorString(NET_MODULE,"%-15s Select %s:%u FAILED, ERR_ID: %d.",__FUNCTION__, lpszHostAddress, nHostPort, WSAGetLastError());
+            //PutErrorString(NET_MODULE,"%-15s Select %s:%u FAILED, ERR_ID: %d.",__FUNCTION__, lpszHostAddress, nHostPort, WSAGetLastError());
             return FALSE;
         }
     }
@@ -1172,7 +1174,7 @@ bool CServer::OnClientInit(CServerClient* pClient)
     {
         pClient->Close();
         FreeClient(pClient);
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数CServer::OnConClientInitial(...)中,AssociateSocketWithCP(...)操作失败.");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数CServer::OnConClientInitial(...)中,AssociateSocketWithCP(...)操作失败.");
         return false;
     }
 
@@ -1218,7 +1220,7 @@ void DoWorkerThreadFunc(CServer* pServer)
         {
             if(lpPerIOData == NULL && dwNumRead == -1)
             {
-                PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__, "完成端口线程产生错误,未取到完成包(bResult == false,lpPerIOData == NULL,ErrorID:%d)。",GetLastError());
+                //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__, "完成端口线程产生错误,未取到完成包(bResult == false,lpPerIOData == NULL,ErrorID:%d)。",GetLastError());
             }
             else if(lpPerIOData)
             {
@@ -1230,7 +1232,7 @@ void DoWorkerThreadFunc(CServer* pServer)
             }
             else
             {
-               PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"完成端口线程产生未知错误！");
+               //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"完成端口线程产生未知错误！");
             }
         }
         else  ////data is valid,dispose!
@@ -1242,7 +1244,7 @@ void DoWorkerThreadFunc(CServer* pServer)
             }
             else if(lpPerIOData == NULL)
             {
-                PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"完成端口线程产生错误(bResult == true,lpPerIOData == NULL)！");
+                //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"完成端口线程产生错误(bResult == true,lpPerIOData == NULL)！");
             }
             else
             {

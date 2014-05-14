@@ -12,12 +12,9 @@
  */
 //=============================================================================
 
-#ifndef _CLIENT_H_
-#define _CLIENT_H_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
+#include <list>
 #include "mysocket.h"
 #include "MsgQueue.h"
 #include "SocketCommands.h"
@@ -32,20 +29,20 @@ class CClient : public CMySocket
 protected:
 	CDataBlockAllocator* m_pDBAllocator;
 
-	typedef list<tagSocketOper*>	SocketOpers;
-	typedef list<tagSocketOper*>::iterator itSockOP;
+	typedef std::list<tagSocketOper*>	SocketOpers;
+    typedef std::list<tagSocketOper*>::iterator itSockOP;
 
 	ulong m_nMaxFreeSockOperNum;
 	SocketOpers	m_FreeSocketOpers;
 	CRITICAL_SECTION	m_CSSockOper;
 
 
-	typedef list<CBaseMessage*>	 NetMessages;
-	typedef list<CBaseMessage*>::iterator itMsg;
+    typedef std::list<CBaseMessage*>	 NetMessages;
+    typedef std::list<CBaseMessage*>::iterator itMsg;
 	NetMessages m_SendMessages;
 
-	typedef list<CDataBlock*>	 ListDataBlock;
-	typedef list<CDataBlock*>::iterator itDB;
+    typedef std::list<CDataBlock*>	 ListDataBlock;
+    typedef std::list<CDataBlock*>::iterator itDB;
 	ListDataBlock	m_ReadDataBlocks;	//已经读取的网络数据
 	int	m_nReadDataSize;				//已经读取数据的大小
 
@@ -156,4 +153,3 @@ public:
 	LONG64	GetTotalRecvSize()				{return m_llRecvSize;}
 };
 
-#endif

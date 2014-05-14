@@ -1,5 +1,7 @@
 #include "MemClient.h"
 #include "BaseMessage.h"
+#include <process.h>
+#include "base/utils.h"
 
 bool g_bRun = true;
 
@@ -36,7 +38,7 @@ bool CMemClient::Initial(const char* szMapObjName,
 	if (NULL == m_hProcThread ||
 		NULL == m_hSendMsgThread)
 	{
-		PutDebugString(NET_MODULE,"内存消息收发线程创建失败. ErrorID: %lu.", GetLastError());
+		//PutDebugString(NET_MODULE,"内存消息收发线程创建失败. ErrorID: %lu.", GetLastError());
 		return false;
 	}
 

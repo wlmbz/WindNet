@@ -14,13 +14,11 @@
 //=============================================================================
 
 
-#ifndef _SERVER_H_
-#define _SERVER_H_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
+#include <map>
+#include <list>
+#include <vector>
 #include "MySocket.h"
 #include "MsgQueue.h"
 #include "socketcommands.h"
@@ -38,15 +36,15 @@ class CServer : public CMySocket
 private:
 	uchar	m_bMode;	//启动模式
 
-	typedef list<tagSocketOper*>	SocketOpers;
-	typedef list<tagSocketOper*>::iterator itSockOP;
+	typedef std::list<tagSocketOper*>	SocketOpers;
+    typedef std::list<tagSocketOper*>::iterator itSockOP;
 
 	uint m_nMaxFreeSockOperNum;
 	SocketOpers	m_FreeSocketOpers;
 	CRITICAL_SECTION	m_CSSockOper;
 
-	typedef list<PER_IO_OPERATION_DATA*>	ListIOOpers;
-	typedef list<PER_IO_OPERATION_DATA*>::iterator itIOOper;
+    typedef std::list<PER_IO_OPERATION_DATA*>	ListIOOpers;
+    typedef std::list<PER_IO_OPERATION_DATA*>::iterator itIOOper;
 
 	uint m_nMaxFreeIOOperNum;
 	ListIOOpers	m_FreeListIOOpers;
@@ -103,20 +101,20 @@ protected:
 	// 连上了服务器的套接字数量
 	long m_lCurClientCount;
 
-	typedef map<long,CServerClient*> AcceptClients;
-	typedef map<long,CServerClient*>::iterator itAClient;
+	typedef std::map<long,CServerClient*> AcceptClients;
+    typedef std::map<long, CServerClient*>::iterator itAClient;
 	//被动接受的套接字
 	AcceptClients	m_AClients;
 
 	//预分配的AccClients
-	typedef list<CServerClient*> FreeAccClients;
-	typedef list<CServerClient*>::iterator itFAClient;
+    typedef std::list<CServerClient*> FreeAccClients;
+    typedef std::list<CServerClient*>::iterator itFAClient;
 	//最大的预分配AccClients数量
 	long	m_nMaxFreeAccClientNum;
 	FreeAccClients	m_FreeAClients;
 
 
-	vector<HANDLE> m_hWorkerThreads;			//工作者线程句柄数组
+    std::vector<HANDLE> m_hWorkerThreads;			//工作者线程句柄数组
 	HANDLE m_hNetMainTheads;					//服务器网络主线程
 	HANDLE m_hAcceptThread;						//acceptThread
 
@@ -211,8 +209,8 @@ protected:
 		long lTotalRecvSize;			//接受总数量
 	};
 
-	typedef map<long,tagDataStat>	mapNetDataStat;
-	typedef map<long,tagDataStat>::iterator itDataStat;
+    typedef std::map<long, tagDataStat>	mapNetDataStat;
+    typedef std::map<long, tagDataStat>::iterator itDataStat;
 	mapNetDataStat	m_NetDataStats;
 
 
@@ -223,22 +221,22 @@ protected:
 		long	lTotalSize;//总大小
 	};
 
-	typedef map<long,tagMsgStat>	mapMsgStat;
-	typedef map<long,tagMsgStat>::iterator itMsgStat;
+    typedef std::map<long, tagMsgStat>	mapMsgStat;
+    typedef std::map<long, tagMsgStat>::iterator itMsgStat;
 	//发送消息的统计
 	mapMsgStat	m_SendMsgsStat;
 	//接受消息的统计
 	mapMsgStat	m_RecvMsgsStat;
 
-	typedef map<long,long>	mapMaxMsgLen;
-	typedef map<long,long>::iterator itMaxMsgLen;
+    typedef std::map<long, long>	mapMaxMsgLen;
+    typedef std::map<long, long>::iterator itMaxMsgLen;
 	mapMaxMsgLen	m_SendMsgMaxLen;
 	mapMaxMsgLen	m_RecvMsgMaxLen;
 
 	CRITICAL_SECTION	m_CSMsgStat;
 
 	
-	map<u_long,ulong>	m_ForbidIPs;				//屏蔽IP列表
+    std::map<u_long, ulong>	m_ForbidIPs;				//屏蔽IP列表
 	ulong				m_lMaxBlockConnetNum;		//最大的阻塞监听数量
 	ulong				m_lSendInterTime;			//建立连接以后到接受到数据的最大间隔事件
 
@@ -247,7 +245,7 @@ protected:
 	ulong				m_dwAcceptThreadTick;		//监听接受线程心跳计数
 	
 
-	map<ulong,ulong>	g_NewAcceptSockets;
+    std::map<ulong, ulong>	g_NewAcceptSockets;
 public:
 
 	inline void IncWorkThreadTick()	{m_dwWorkThreadTick++;}
@@ -307,5 +305,3 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 };
-
-#endif

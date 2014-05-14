@@ -1,5 +1,6 @@
 #include "MsgCry.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 
 
 #define ENCRYPT_SIZE		0x0060

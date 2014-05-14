@@ -12,9 +12,17 @@
 //=============================================================================
 
 
-#include <Sddl.h>
 #include "MapFile.h"
+#include <Sddl.h>
+#include <mmsystem.h>
+#include <tchar.h>
+#include <assert.h>
 #include "BaseMessage.h"
+#include "base/utils.h"
+
+
+using namespace std;
+
 
 const int MAX_BLOCK_MSGS = 200;
 const int ERROR_REPORT_FRQ = 2;
@@ -61,7 +69,7 @@ bool CMapFile::Initial(eFileMapServerType eFMType,const char* pszMapObjName,cons
 				OPEN_ALWAYS,0,0);
 			if(INVALID_HANDLE_VALUE == m_hFile)
 			{
-				PutDebugString(NET_MODULE,"初始化MapFile时, 创建文件(%s)出错. ErrorID: %lu.",pFileName,GetLastError());
+				//PutDebugString(NET_MODULE,"初始化MapFile时, 创建文件(%s)出错. ErrorID: %lu.",pFileName,GetLastError());
 				m_eType = FMT_No;
 				return false;
 			}
@@ -93,7 +101,7 @@ bool CMapFile::Initial(eFileMapServerType eFMType,const char* pszMapObjName,cons
 			CloseHandle(m_hFile); 
 		}
 		m_eType = FMT_No;
-		PutDebugString(NET_MODULE,"初始化MapFile时, 创建影射文件(%s)出错. ErrorID: %lu.",pszMapObjName,GetLastError());
+		//PutDebugString(NET_MODULE,"初始化MapFile时, 创建影射文件(%s)出错. ErrorID: %lu.",pszMapObjName,GetLastError());
 		return false;
 	}
 
@@ -109,7 +117,7 @@ bool CMapFile::Initial(eFileMapServerType eFMType,const char* pszMapObjName,cons
 			CloseHandle(m_hFile); 
 		}
 		m_eType = FMT_No;
-        PutDebugString(NET_MODULE,"初始化MapFile时, 影射视域时(%sC|S)出错. ErrorID: %lu.",pszMapObjName,GetLastError());
+        //PutDebugString(NET_MODULE,"初始化MapFile时, 影射视域时(%sC|S)出错. ErrorID: %lu.",pszMapObjName,GetLastError());
 		return false;
 	}
 
@@ -139,10 +147,10 @@ bool CMapFile::Initial(eFileMapServerType eFMType,const char* pszMapObjName,cons
 		}
 		CloseHandle(m_hMapObject); 
 		m_eType = FMT_No;
-		PutDebugString(NET_MODULE,
-			"初始化MapFile时, 创建|打开互斥对象(%s|C)出错. ErrorID: %lu.",
-			pszMutexObjS,
-			GetLastError());
+		//PutDebugString(NET_MODULE,
+		//	"初始化MapFile时, 创建|打开互斥对象(%s|C)出错. ErrorID: %lu.",
+		//	pszMutexObjS,
+		//	GetLastError());
 		return false;
 	}
 
@@ -174,10 +182,10 @@ bool CMapFile::Initial(eFileMapServerType eFMType,const char* pszMapObjName,cons
 		}
 		CloseHandle(m_hMapObject); 
 		m_eType = FMT_No;
-		PutDebugString(NET_MODULE,
-			"初始化MapFile时, 创建|打开事件对象(%s S|C|Send)出错. ErrorID: %lu.",
-			pszMapObjName,
-			GetLastError());
+		//PutDebugString(NET_MODULE,
+		//	"初始化MapFile时, 创建|打开事件对象(%s S|C|Send)出错. ErrorID: %lu.",
+		//	pszMapObjName,
+		//	GetLastError());
 		return false;
 	}
 
@@ -192,10 +200,10 @@ bool CMapFile::Initial(eFileMapServerType eFMType,const char* pszMapObjName,cons
 		}
 		CloseHandle(m_hMapObject); 
 		m_eType = FMT_No;
-		PutDebugString(NET_MODULE,
-			"初始化MapFile时, 创建事件对象(%s)出错. ErrorID: %lu.",
-			pszEventObjSend,
-			GetLastError());
+		//PutDebugString(NET_MODULE,
+		//	"初始化MapFile时, 创建事件对象(%s)出错. ErrorID: %lu.",
+		////	pszEventObjSend,
+		//	GetLastError());
 		return false;
 	}
 
@@ -342,7 +350,7 @@ int CMapFile::WriteData(int nPos,const char *pData,int nLen)
 	}
 	else
 	{
-		PutDebugString(NET_MODULE, "内存映射服务类型配置错误(%d). ErrorID: %lu.", m_eType, GetLastError());
+		//PutDebugString(NET_MODULE, "内存映射服务类型配置错误(%d). ErrorID: %lu.", m_eType, GetLastError());
 		assert(0);
 	}
 
@@ -364,7 +372,7 @@ int CMapFile::ReadData(int nPos,char *pData,int nLen)
 	}
 	else
 	{
-		PutDebugString(NET_MODULE, "内存映射服务类型配置错误(%d). ErrorID: %lu.", m_eType, GetLastError());
+		//PutDebugString(NET_MODULE, "内存映射服务类型配置错误(%d). ErrorID: %lu.", m_eType, GetLastError());
 		assert(0);
 	}
 
@@ -403,7 +411,7 @@ long CMapFile::SendMsg(void)
 	WaitForSingleObject(m_hSendEvent, INFINITE);
 	if (m_bExit)
 	{
-		PutDebugString(NET_MODULE,"发送线程退出. ErrorID: %lu.", GetLastError());
+		//PutDebugString(NET_MODULE,"发送线程退出. ErrorID: %lu.", GetLastError());
 		return -1;
 	}
 
@@ -433,7 +441,7 @@ long CMapFile::SendMsg(void)
 		}
 		else
 		{
-			PutDebugString(NET_MODULE,"待发送消息为NULL. ErrorID: %lu.", GetLastError());
+			//PutDebugString(NET_MODULE,"待发送消息为NULL. ErrorID: %lu.", GetLastError());
 		}
 	}
 	if(bDelaySend)
@@ -469,7 +477,7 @@ CMapFile::eRetSendMsg CMapFile::SendMsgimmediately(CBaseMessage* pMsg)
 	}
 	else
 	{
-		PutDebugString(NET_MODULE, "内存映射服务类型配置错误(%d). ErrorID: %lu.", m_eType, GetLastError());
+		//PutDebugString(NET_MODULE, "内存映射服务类型配置错误(%d). ErrorID: %lu.", m_eType, GetLastError());
 		assert(0);
 	}
 
@@ -489,7 +497,7 @@ CMapFile::eRetSendMsg CMapFile::SendMsgimmediately(CBaseMessage* pMsg)
 		static int lNo = 0;
 		if (++lNo % ERROR_REPORT_FRQ == 1 && lNo < MAX_ERROR_REPORT)
 		{
-			PutDebugString(NET_MODULE, "发送内存消息过大: %ld, 出错次数: %d. ErrorID: %lu.", lNeedSize, lNo, GetLastError());
+			//PutDebugString(NET_MODULE, "发送内存消息过大: %ld, 出错次数: %d. ErrorID: %lu.", lNeedSize, lNo, GetLastError());
 		}
 		return eRet;
 	}
@@ -516,7 +524,7 @@ CMapFile::eRetSendMsg CMapFile::SendMsgimmediately(CBaseMessage* pMsg)
 		static int lNo = 0;
 		if (++lNo % ERROR_REPORT_FRQ == 1 && lNo < MAX_ERROR_REPORT)
 		{
-			PutDebugString(NET_MODULE, "内存映射文件空间不足, 出错次数: %d. ErrorID: %lu.", lNo, GetLastError());
+			//PutDebugString(NET_MODULE, "内存映射文件空间不足, 出错次数: %d. ErrorID: %lu.", lNo, GetLastError());
 		}
 	}
 	ReleaseMutex(hMutex);
@@ -536,7 +544,7 @@ void CMapFile::SendMsg(CBaseMessage *pMsg)
 			static int lNo = 0;
 			if (++lNo % ERROR_REPORT_FRQ == 1 && lNo < MAX_ERROR_REPORT)
 			{
-				PutDebugString(NET_MODULE, "等待发送内存消息数量过多: %ld, 出错次数: %d. ErrorID: %lu.", lQueueSize, lNo, GetLastError());
+				//PutDebugString(NET_MODULE, "等待发送内存消息数量过多: %ld, 出错次数: %d. ErrorID: %lu.", lQueueSize, lNo, GetLastError());
 			}
 		}
 		//主动触发一次,使发送线程继续发送阻塞的消息
@@ -584,7 +592,7 @@ CBaseMessage* CMapFile::RecvMsg(void)
 	}
 	else
 	{
-		PutDebugString(NET_MODULE, "内存映射服务类型配置错误(%d). ErrorID: %lu.", m_eType, GetLastError());
+		//PutDebugString(NET_MODULE, "内存映射服务类型配置错误(%d). ErrorID: %lu.", m_eType, GetLastError());
 		assert(0);
 	}
 
@@ -599,7 +607,7 @@ CBaseMessage* CMapFile::RecvMsg(void)
 		WaitForSingleObject(hEvent, INFINITE);
 		if (m_bExit)
 		{
-			PutDebugString(NET_MODULE, "接收线程退出. ErrorID: %lu.", GetLastError());
+			//PutDebugString(NET_MODULE, "接收线程退出. ErrorID: %lu.", GetLastError());
 			return NULL;
 		}
 
@@ -616,7 +624,7 @@ CBaseMessage* CMapFile::RecvMsg(void)
 	long lCurSize = 0;
 	if (lDataSize > 10e6)
 	{
-		PutDebugString(NET_MODULE, "%s收取内存消息大小过大(%ld), 放弃.", m_szCurDir, lDataSize);
+		//PutDebugString(NET_MODULE, "%s收取内存消息大小过大(%ld), 放弃.", m_szCurDir, lDataSize);
 		ReleaseMutex(hMutex); 
 		return NULL;
 	}
@@ -652,7 +660,7 @@ void CMapFile::ClosePassiveFiles(void)
 			if (dwCurTime - pFileInfo->dwLastWriteTime > 8000 &&
 				pFileInfo->pFile != NULL)
 			{
-				PutDebugString(NET_MODULE, "文件(%s)长时间未操作, 关闭文件.", pFileInfo->strFileName.c_str());
+				//PutDebugString(NET_MODULE, "文件(%s)长时间未操作, 关闭文件.", pFileInfo->strFileName.c_str());
 
 				fclose(pFileInfo->pFile);
 				pFileInfo->pFile = NULL;
@@ -697,7 +705,7 @@ tagFileInfo0x* CMapFile::AddFile(const char* pszFileName)
 	}
 	else
 	{
-		PutDebugString(NET_MODULE,"Fatal error: AddFile失败！");
+		//PutDebugString(NET_MODULE,"Fatal error: AddFile失败！");
 		DELETE_SAFE(pFileInfo);
 	}
 
@@ -722,7 +730,7 @@ void CMapFile::WriteFile(const char* pszFileName, const char* pszContent)
 		{
 			_snprintf(pszErrorInfo,1024,"文件(%s%s)不存在, 添加文件.", m_szCurDir, pszFileName);
 		}
-		PutDebugString(NET_MODULE,pszErrorInfo);
+		//PutDebugString(NET_MODULE,pszErrorInfo);
 		pFileInfo = AddFile(pszFileName);
 	}
 
@@ -731,7 +739,7 @@ void CMapFile::WriteFile(const char* pszFileName, const char* pszContent)
 		pFileInfo->dwLastWriteTime = timeGetTime();
 		if (fseek(pFileInfo->pFile, 0, SEEK_END) != 0)
 		{
-			PutDebugString(NET_MODULE, "写文件(%s%s)出错. FILE==NULL. ErrorID:%d.", m_szCurDir, pszFileName, errno);
+			//PutDebugString(NET_MODULE, "写文件(%s%s)出错. FILE==NULL. ErrorID:%d.", m_szCurDir, pszFileName, errno);
 		}
 		else
 		{
@@ -742,11 +750,11 @@ void CMapFile::WriteFile(const char* pszFileName, const char* pszContent)
 			if( NULL == pFileInfo->pFile ||
 				_fileno(pFileInfo->pFile) < 0)
 			{
-				PutDebugString(NET_MODULE, "写文件(%s%s)出错. FILE==NULL. ErrorID:%d.", m_szCurDir, pszFileName, errno);
+				//PutDebugString(NET_MODULE, "写文件(%s%s)出错. FILE==NULL. ErrorID:%d.", m_szCurDir, pszFileName, errno);
 			}
 			else if( 1 != fwrite(pszFormatContent,strnlen(pszFormatContent,MAX_CONTENT_LEN+256),1,pFileInfo->pFile) )
 			{
-				PutDebugString(NET_MODULE, "写文件(%s%s)出错. failed writen. ErrorID:%d.", m_szCurDir, pszFileName, errno);
+				//PutDebugString(NET_MODULE, "写文件(%s%s)出错. failed writen. ErrorID:%d.", m_szCurDir, pszFileName, errno);
 			}
 		}
 	}
@@ -795,7 +803,7 @@ void CMapFile::SetCurDir(const char* szDir)
 {
 	if (strcpy_s(m_szCurDir, szDir) != 0)
 	{
-		PutDebugString(NET_MODULE, "设置当前工作目录(%s)出错. ErrorID: %lu.", szDir, errno);
+		//PutDebugString(NET_MODULE, "设置当前工作目录(%s)出错. ErrorID: %lu.", szDir, errno);
 	}
 
 	CreateDirectory(m_szCurDir, NULL);

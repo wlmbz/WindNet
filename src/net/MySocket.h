@@ -12,17 +12,12 @@
  */
 //=============================================================================
 
-#ifndef _MYSOCKET_H_
-#define _MYSOCKET_H_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-#include <iostream>
-#include <vector>
-#include "winsock2.h"
 
-using namespace std;
+
+#include <Winsock2.h>
+#include "base/DefType.h"
+
 
 const int MAX_MESSAGE_LENGTH = 1048576*2;
 class CBaseMessage;
@@ -230,5 +225,3 @@ public:
 //得到一个ID分配给Socket
 long GetSocketID();
 ulong STR2UL(const char *szIP);
-
-#endif

@@ -8,8 +8,11 @@
 #pragma once
 
 #include <windows.h>
+#include <deque>
+#include "base/DefType.h"
 
 class CServerClient;
+
 //对网络操作的类型
 enum eSocketOperaType
 {
@@ -80,7 +83,7 @@ struct tagSocketOper
 	}
 };
 
-typedef deque<tagSocketOper*> CommandsQueue;
+typedef std::deque<tagSocketOper*> CommandsQueue;
 
 //此类的消费线程只能有一个
 

@@ -11,10 +11,11 @@
  */
 //=============================================================================
 
-#ifndef __DATABLOCKSET_WRITEREAD__H__
-#define __DATABLOCKSET_WRITEREAD__H__
-
 #pragma once
+
+#include <vector>
+#include "base/DefType.h"
+#include "base/GUID.h"
 
 class CDataBlock;
 class CDataBlockAllocator;
@@ -24,8 +25,8 @@ struct tagDBOpParam;
 //定义了一个写数据块的集合
 typedef struct tagDataBlockWriteSet
 {
-	typedef vector<CDataBlock*>::iterator itDataSet;
-	vector<CDataBlock*>* pDataSet;
+	typedef std::vector<CDataBlock*>::iterator itDataSet;
+    std::vector<CDataBlock*>* pDataSet;
 
 	//数据块分配器
 	CDataBlockAllocator* pDBAllocator;
@@ -43,7 +44,7 @@ typedef struct tagDataBlockWriteSet
 
 	void Initial(CDataBlockAllocator* pAllocator,
 							tagDBOpParam* pWriteParam,
-							vector<CDataBlock*>* pSet,
+							std::vector<CDataBlock*>* pSet,
 							ulong* pSize)
 	{
 		pDBAllocator = pAllocator;
@@ -95,8 +96,8 @@ private:
 
 typedef struct tagDataBlockReadSet
 {
-	typedef vector<CDataBlock*>::iterator itDataSet;
-	vector<CDataBlock*>* pDataSet;
+	typedef std::vector<CDataBlock*>::iterator itDataSet;
+    std::vector<CDataBlock*>* pDataSet;
 
 	//当前数据块集合操作参数
 	tagDBOpParam* pDBReadParam;
@@ -107,7 +108,7 @@ typedef struct tagDataBlockReadSet
 	{
 	}
 	void Initial(tagDBOpParam* pReadParam,
-						vector<CDataBlock*>* pSet)
+        std::vector<CDataBlock*>* pSet)
 	{
 		pDBReadParam = pReadParam;
 		pDataSet = pSet;
@@ -181,5 +182,3 @@ private:
 	void AddRdDataBlock();
 
 }DBReadSet;
-
-#endif

@@ -14,14 +14,15 @@
 */
 //=============================================================================
 
-
-#include "BaseMessage.h"
-#include <mmsystem.h>
 #include "serverClient.h"
+#include <mmsystem.h>
+#include <assert.h>
+#include "BaseMessage.h"
 #include "Servers.h"
-#include "../Module/Crc32Static.h"
+#include "io/Crc32Static.h"
 
 
+using namespace std;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -174,7 +175,7 @@ bool CServerClient::ReadFromCompletionPort(PER_IO_OPERATION_DATA* pIOData,CDataB
         pDB = m_pDBAllocator->AllocDB(8);
     if(NULL == pDB)
     {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数CServerClient::ReadFromCompletionPort(...)中,分配内存失败！");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数CServerClient::ReadFromCompletionPort(...)中,分配内存失败！");
         return false;
     }
 
@@ -195,7 +196,7 @@ bool CServerClient::ReadFromCompletionPort(PER_IO_OPERATION_DATA* pIOData,CDataB
         if (nError != WSA_IO_PENDING)
         {
             m_pDBAllocator->FreeDB(pDB);
-            PutErrorString(NET_MODULE,"%-15s 在函数CServerClient::ReadFromCompletionPort(...)中,WSARecv()操作失败！(ErrorID:%d)",__FUNCTION__,nError);
+            //PutErrorString(NET_MODULE,"%-15s 在函数CServerClient::ReadFromCompletionPort(...)中,WSARecv()操作失败！(ErrorID:%d)",__FUNCTION__,nError);
             return false;
         }
     }
@@ -251,7 +252,7 @@ void CServerClient::SendZeroByteData()
     bool bSuccess = PostQueuedCompletionStatus(m_pServers->m_hCompletionPort,0,(ulong)GetIndexID(),(OVERLAPPED*)pPerIOData) ? true : false;
     if( !bSuccess && WSAGetLastError() != ERROR_IO_PENDING )
     {
-        PutErrorString(NET_MODULE,"%-15sCServerClient::SendZeroByteData().PostQueuedCompletionStatus .erros(errid:%d).",__FUNCTION__,WSAGetLastError());
+        //PutErrorString(NET_MODULE,"%-15sCServerClient::SendZeroByteData().PostQueuedCompletionStatus .erros(errid:%d).",__FUNCTION__,WSAGetLastError());
         return;
     }
     m_bSendZeroByteData = true;
@@ -302,8 +303,8 @@ int CServerClient::Send(CBaseMessage *pMsg,int nFlags)
     if (lTotalSendSize != lTotalMsgSize)
     {
         free(pPerIOData);		
-        PutErrorString(NET_MODULE,"%-15s Msg Length Error(NetFlag:%d,IndexID:%d,BlockSize:%d,MsgType:%d,MsgSize:%d,SendSize:%d)",
-            __FUNCTION__,GetIndexID(),lBlockSize,pMsg->GetType(),pMsg->GetTotalSize(),lTotalSendSize);
+        //PutErrorString(NET_MODULE,"%-15s Msg Length Error(NetFlag:%d,IndexID:%d,BlockSize:%d,MsgType:%d,MsgSize:%d,SendSize:%d)",
+        //    __FUNCTION__,GetIndexID(),lBlockSize,pMsg->GetType(),pMsg->GetTotalSize(),lTotalSendSize);
         if(pMsg->RemoveRefCount() == 0)
             CBaseMessage::FreeMsg(pMsg);
         return true;
@@ -319,7 +320,7 @@ int CServerClient::Send(CBaseMessage *pMsg,int nFlags)
         if ( nError != WSA_IO_PENDING)
         {
             free(pPerIOData);
-            PutErrorString(NET_MODULE,"%-15s 向客户端发送消息错误(errorID:%d)",__FUNCTION__,nError);
+            //PutErrorString(NET_MODULE,"%-15s 向客户端发送消息错误(errorID:%d)",__FUNCTION__,nError);
             return false;
         }
     }
@@ -347,8 +348,8 @@ bool CServerClient::AddSendMsg(CBaseMessage* pMsg)
         {
             CBaseMessage::FreeMsg(pMsg);
         }
-        PutErrorString(NET_MODULE,"%-15s the blocked send messge count(num:%d) greater the max count(num:%d)",
-            __FUNCTION__,m_SendMessages.size(),m_lMaxBlockSendMsnNum);
+        //PutErrorString(NET_MODULE,"%-15s the blocked send messge count(num:%d) greater the max count(num:%d)",
+        //    __FUNCTION__,m_SendMessages.size(),m_lMaxBlockSendMsnNum);
 
         return false;
     }
@@ -405,7 +406,7 @@ bool CServerClient::AddReceiveData(long lSequeNumber,CDataBlock *pDB)
     itDBMap it = m_ReadBuffer.find(m_CurrentReadSequenceNumber);
     if(it != m_ReadBuffer.end())
     {
-        Log4c::Warn(NET_MODULE,"The key has already exist in the read-buffs");
+        //Log4c::Warn(NET_MODULE,"The key has already exist in the read-buffs");
     }
 
     if(lSequeNumber == m_CurrentReadSequenceNumber)
@@ -459,11 +460,11 @@ long CServerClient::GetCurMsgLen()
             memcpy(pLen+lPos,pDB->Base(),minSize);
             if(len<=0)
             {
-                PutErrorString(NET_MODULE,"%-15s Get MsgLen Error1!(flag:%d,Index:%d)len:%d,ReadDataBlocksSize:%d,minSize:%d.(m_lLastMsgTotalSize:%d,\
-                             m_lLastMsgLen:%d,m_lLastMsgType:%d,m_lLastMsgPreDBNum:%d,m_lLastMsgPosDBNum:%d,m_lLastMsgMemMoveDBPos:%d,\
-                             m_lLastMsgMemMoveDBSize:%d,m_lLastMsgRemainSize:%d)",
-                             __FUNCTION__,len,m_ReadDataBlocks.size(),minSize,m_lLastMsgTotalSize,m_lLastMsgLen,m_lLastMsgType,m_lLastMsgPreDBNum,
-                             m_lLastMsgPosDBNum,m_lLastMsgMemMoveDBPos,m_lLastMsgMemMoveDBSize,m_lLastMsgRemainSize);
+                //PutErrorString(NET_MODULE,"%-15s Get MsgLen Error1!(flag:%d,Index:%d)len:%d,ReadDataBlocksSize:%d,minSize:%d.(m_lLastMsgTotalSize:%d,\
+                //             m_lLastMsgLen:%d,m_lLastMsgType:%d,m_lLastMsgPreDBNum:%d,m_lLastMsgPosDBNum:%d,m_lLastMsgMemMoveDBPos:%d,\
+                //             m_lLastMsgMemMoveDBSize:%d,m_lLastMsgRemainSize:%d)",
+                //             __FUNCTION__,len,m_ReadDataBlocks.size(),minSize,m_lLastMsgTotalSize,m_lLastMsgLen,m_lLastMsgType,m_lLastMsgPreDBNum,
+                //             m_lLastMsgPosDBNum,m_lLastMsgMemMoveDBPos,m_lLastMsgMemMoveDBSize,m_lLastMsgRemainSize);
             }
             lPos+=minSize;
             size -= minSize;
@@ -477,23 +478,23 @@ long CServerClient::GetCurMsgLen()
     {
         if(m_bChecked && len > m_lMaxMsgLen)
         {
-            PutErrorString(NET_MODULE,"Get MsgLen Error2!(flag:%d,Index:%d)len:%d,MaxMsgLen:%d(m_lLastMsgTotalSize:%d,m_lLastMsgLen:%d,\
-                         m_lLastMsgType:%d,m_lLastMsgPreDBNum:%d,m_lLastMsgPosDBNum:%d,m_lLastMsgMemMoveDBPos:%d,m_lLastMsgMemMoveDBSize:%d,\
-                         m_lLastMsgRemainSize:%d)",
-                         __FUNCTION__,GetFlag(),GetIndexID(),len,m_lMaxMsgLen,m_lLastMsgTotalSize,m_lLastMsgLen,m_lLastMsgType, 
-                         m_lLastMsgPreDBNum,m_lLastMsgPosDBNum,m_lLastMsgMemMoveDBPos,m_lLastMsgMemMoveDBSize,m_lLastMsgRemainSize);
-__FUNCTION__,
+           // PutErrorString(NET_MODULE,"Get MsgLen Error2!(flag:%d,Index:%d)len:%d,MaxMsgLen:%d(m_lLastMsgTotalSize:%d,m_lLastMsgLen:%d,\
+           //              m_lLastMsgType:%d,m_lLastMsgPreDBNum:%d,m_lLastMsgPosDBNum:%d,m_lLastMsgMemMoveDBPos:%d,m_lLastMsgMemMoveDBSize:%d,\
+           //              m_lLastMsgRemainSize:%d)",
+           //              __FUNCTION__,GetFlag(),GetIndexID(),len,m_lMaxMsgLen,m_lLastMsgTotalSize,m_lLastMsgLen,m_lLastMsgType, 
+           //              m_lLastMsgPreDBNum,m_lLastMsgPosDBNum,m_lLastMsgMemMoveDBPos,m_lLastMsgMemMoveDBSize,m_lLastMsgRemainSize);
+//__FUNCTION__,
             //关闭网络连接
             Close();
             return 0x7FFFFFFF;
         }
         if( len < long(4+sizeof(CBaseMessage::stMsg)) )
         {
-            PutErrorString(NET_MODULE,"%-15s Get MsgLen Error3!(flag:%d,Index:%d)m_nReadDataSize:%d,ReadDataBlocksSize:%d,len:%d(m_lLastMsgTotalSize:%d,\
-                         m_lLastMsgLen:%d,m_lLastMsgType:%d,m_lLastMsgPreDBNum:%d,m_lLastMsgPosDBNum:%d,m_lLastMsgMemMoveDBPos:%d,\
-                         m_lLastMsgMemMoveDBSize:%d,m_lLastMsgRemainSize:%d)",
-                         __FUNCTION__,GetFlag(),GetIndexID(),m_nReadDataSize,m_ReadDataBlocks.size(),len,m_lLastMsgTotalSize,m_lLastMsgLen,
-                         m_lLastMsgType,m_lLastMsgPreDBNum,m_lLastMsgPosDBNum,m_lLastMsgMemMoveDBPos,m_lLastMsgMemMoveDBSize,m_lLastMsgRemainSize);
+            //PutErrorString(NET_MODULE,"%-15s Get MsgLen Error3!(flag:%d,Index:%d)m_nReadDataSize:%d,ReadDataBlocksSize:%d,len:%d(m_lLastMsgTotalSize:%d,\
+            //             m_lLastMsgLen:%d,m_lLastMsgType:%d,m_lLastMsgPreDBNum:%d,m_lLastMsgPosDBNum:%d,m_lLastMsgMemMoveDBPos:%d,\
+            //             m_lLastMsgMemMoveDBSize:%d,m_lLastMsgRemainSize:%d)",
+            //             __FUNCTION__,GetFlag(),GetIndexID(),m_nReadDataSize,m_ReadDataBlocks.size(),len,m_lLastMsgTotalSize,m_lLastMsgLen,
+            //             m_lLastMsgType,m_lLastMsgPreDBNum,m_lLastMsgPosDBNum,m_lLastMsgMemMoveDBPos,m_lLastMsgMemMoveDBSize,m_lLastMsgRemainSize);
             Close();
             return 0x7FFFFFFF;
         }
@@ -501,11 +502,11 @@ __FUNCTION__,
 
     if(size > 0)
     {
-        PutErrorString(NET_MODULE,"%-15s Get MsgLen Error4!(flag:%d,Index:%d)m_nReadDataSize:%d,ReadDataBlocksSize:%d,size:%d(m_lLastMsgTotalSize:%d,\
-                     m_lLastMsgLen:%d,m_lLastMsgType:%d,m_lLastMsgPreDBNum:%d,m_lLastMsgPosDBNum:%d,m_lLastMsgMemMoveDBPos:%d,\
-                     m_lLastMsgMemMoveDBSize:%d,m_lLastMsgRemainSize:%d)",
-                     __FUNCTION__,GetFlag(),GetIndexID(),m_nReadDataSize,m_ReadDataBlocks.size(),size,m_lLastMsgTotalSize,m_lLastMsgLen,
-                     m_lLastMsgType,m_lLastMsgPreDBNum,m_lLastMsgPosDBNum,m_lLastMsgMemMoveDBPos,m_lLastMsgMemMoveDBSize,m_lLastMsgRemainSize);
+        //PutErrorString(NET_MODULE,"%-15s Get MsgLen Error4!(flag:%d,Index:%d)m_nReadDataSize:%d,ReadDataBlocksSize:%d,size:%d(m_lLastMsgTotalSize:%d,\
+        //             m_lLastMsgLen:%d,m_lLastMsgType:%d,m_lLastMsgPreDBNum:%d,m_lLastMsgPosDBNum:%d,m_lLastMsgMemMoveDBPos:%d,\
+        //             m_lLastMsgMemMoveDBSize:%d,m_lLastMsgRemainSize:%d)",
+        //             __FUNCTION__,GetFlag(),GetIndexID(),m_nReadDataSize,m_ReadDataBlocks.size(),size,m_lLastMsgTotalSize,m_lLastMsgLen,
+        //             m_lLastMsgType,m_lLastMsgPreDBNum,m_lLastMsgPosDBNum,m_lLastMsgMemMoveDBPos,m_lLastMsgMemMoveDBSize,m_lLastMsgRemainSize);
         len = 0x7FFFFFFF;
     }
     return len;
@@ -546,7 +547,7 @@ void CServerClient::OnReceive(int nErrorCode)
         char strInfo[512] = "";
         if (recvMsgLen < long(HEAD_SIZE + sizeof(CBaseMessage::stMsg)))
         {
-            PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"error，the got data block length size is to small");
+            //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"error，the got data block length size is to small");
             Close();
             return;
         }
@@ -564,7 +565,7 @@ void CServerClient::OnReceive(int nErrorCode)
         long recvDBSize = recvDB->GetCurSize();
         if (recvDBSize == 0)
         {
-            PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"错误，弹出的消息块长度为0");
+            //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"错误，弹出的消息块长度为0");
         }
 
         CDataBlock* allocDB = m_pDBAllocator->AllocDB(9);
@@ -590,12 +591,12 @@ void CServerClient::OnReceive(int nErrorCode)
                     recvDBSize = recvDB->GetCurSize();
                     if(recvDBSize == 0)
                     {
-                        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"error，the got data block length size is 0");
+                        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"error，the got data block length size is 0");
                     }
                 }
                 else
                 {
-                    PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"error,pop a empty data block!");
+                    //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"error,pop a empty data block!");
                     recvDBSize = 0;
                 }
                 recvDBPos = 0;
@@ -613,7 +614,7 @@ void CServerClient::OnReceive(int nErrorCode)
                 else
                 {
                     maxDBSize = 0;
-                    PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"error,the pointer allocDB is null");
+                    //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"error,the pointer allocDB is null");
                 }
                 allocDBPos = 0;
             }
@@ -769,7 +770,7 @@ void CServerClient::IncUseCount()
 {
     if(m_nUseCount >= 65535)
     {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"连接索引计数超过了最大值.");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"连接索引计数超过了最大值.");
         m_nUseCount = 1;
     }
     m_nUseCount++;

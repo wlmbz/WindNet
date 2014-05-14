@@ -11,15 +11,13 @@
  */
 //=============================================================================
 
-#include "StdAfx.h"
+
 #include "DataBlockAllocator.h"
 #include "DataBlock.h"
+#include "base/logging.h"
+#include "base/utils.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+using namespace std;
 
 CDataBlockAllocator::CDataBlockAllocator(int nDBNum,int nDBSize,int bIniShareDB)
 :m_nMaxDBNum(nDBNum)
@@ -41,15 +39,9 @@ void CDataBlockAllocator::Initial(int bIniShareDB)
 	for(;i<m_nMaxDBNum;i++)
 	{
 		pDB = new CDataBlock(m_nDBSize);
-		if(pDB)
-		{
-			pDB->SetIsInitData(true);
-			m_FreeDataBlocks.push_back(pDB);
-		}
-		else
-		{
-			Log4c::Warn(ROOT_MODULE, "在函数CDataBlockAllocator::Initial(),分配CDataBlock出错。");
-		}
+        CHECK_NOTNULL(pDB);
+        pDB->SetIsInitData(true);
+        m_FreeDataBlocks.push_back(pDB);
 	}
 	m_ShareDataBlocks.clear();
 	m_AllocedShareDB.clear();
@@ -109,13 +101,8 @@ void CDataBlockAllocator::Release()
 	map<long,long>::iterator itTest = m_MapTest.begin();
 	for(;itTest != m_MapTest.end();itTest++)
 	{
-		if((*itTest).second != 0)
-		{
-// 			sprintf(str,"Flag:%d,Count:%d",(*itTest).first,(*itTest).second);
-// 			PutStringToFile("DBAllocTest",str);
-
-            Log4c::Trace(ROOT_MODULE,"Flag:%d,Count:%d",(*itTest).first,(*itTest).second);
-		}
+        LOG_IF((*itTest).second != 0, TRACE)
+            << "Flag: " << (*itTest).first << ", Count: " << (*itTest).second;
 	}
 }
 
@@ -126,13 +113,8 @@ void CDataBlockAllocator::PutAllocInfo(const char* pszFileName)
 	map<long,long>::iterator itTest = m_MapTest.begin();
 	for(;itTest != m_MapTest.end();itTest++)
 	{
-		if((*itTest).second != 0)
-		{
-// 			sprintf(str,"Flag:%d,Count:%d",(*itTest).first,(*itTest).second);
-// 			PutStringToFile(pszFileName,str);
-
-            Log4c::Trace(ROOT_MODULE,"Flag:%d,Count:%d",(*itTest).first,(*itTest).second);
-		}
+        LOG_IF((*itTest).second != 0, TRACE)
+            << "Flag: " << (*itTest).first << ", Count: " << (*itTest).second;
 	}
 	LeaveCriticalSection(&m_CSFreeDB);
 }
@@ -151,8 +133,7 @@ CDataBlock*	CDataBlockAllocator::AllocDB(long lTestFlag)
 	else
 	{
 		pDB = new CDataBlock(m_nDBSize);
-		if(NULL==pDB)
-			Log4c::Warn(ROOT_MODULE, "警告， 没有足够的内存！");
+        DCHECK_NOTNULL(pDB);
 	}
 
 	if(pDB)
@@ -203,7 +184,7 @@ uchar* CDataBlockAllocator::AllockShareDB(long lSize)
 	if(!pData)
 	{
 		pData = new uchar[lSize];
-		Log4c::Warn(ROOT_MODULE,"waring,When call DataBlockAllocator::AllockShareDB(%d),not find the datablock",lSize);
+        LOG(WARNING) << "When call DataBlockAllocator::AllockShareDB(%d), not find the datablock" << lSize;		
 	}
 	return pData;
 }

@@ -13,11 +13,15 @@
 //=============================================================================
 
 #include "Clients.h"
-#include "mmsystem.h"
+#include <mmsystem.h>
+#include <process.h>
+#include <assert.h>
 #include "BaseMessage.h"
-#include "../Module/Crc32Static.h"
+#include "base/utils.h"
+#include "io/Crc32Static.h"
 
 
+using namespace std;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -100,13 +104,13 @@ bool CClient::Create(UINT nSocketPort,			// 端口
 {
 	if(!CMySocket::Create(nSocketPort,lpszSocketAddress,nSocketType,lEvent,bAsyncSelect))
 	{
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在CClient::Create(...)中,CMySocket::Create()操作出错!");
+        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在CClient::Create(...)中,CMySocket::Create()操作出错!");
 		return FALSE;
 	}
 	
 	if( bAsyncSelect && !AsyncSelect(lEvent) )
 	{
-		PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在CClient::Create(...)中,AsyncSelect(..)出错!");
+		//PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在CClient::Create(...)中,AsyncSelect(..)出错!");
 		return FALSE;
 	}
 		
@@ -334,7 +338,7 @@ int CClient::Send(const void* lpBuf, int nBufLen, int nFlags)
 		{
 			m_bSendData=false;
 			long nError = WSAGetLastError();
-			PutErrorString(NET_MODULE,"%-15s 向服务器发送消息错误(error:%d)",__FUNCTION__,nError);
+			//PutErrorString(NET_MODULE,"%-15s 向服务器发送消息错误(error:%d)",__FUNCTION__,nError);
 			break;
 		}
 		nSendSize -= nRet;
@@ -351,11 +355,11 @@ void CClient::OnSend(int nErrorCode)
 {
 	if(nErrorCode != 0)
 	{
-		PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__, "FD_WRITE failed with error %d!",nErrorCode);
+		//PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__, "FD_WRITE failed with error %d!",nErrorCode);
 		return;
 	}
 
-	PutTraceString(NET_MODULE,"FD_WRITE Event ok!");
+	//PutTraceString(NET_MODULE,"FD_WRITE Event ok!");
 	//表示可以发送数据
 	m_bSendData=true;
 	//继续发送数据
@@ -368,7 +372,7 @@ void CClient::OnReceive(int nErrorCode)
 	if(nErrorCode != 0)
 	{
 		//客户端接受数据失败
-		PutErrorString(NET_MODULE,"%-15s FD_READ failed with error %d\n",__FUNCTION__,nErrorCode);
+		//PutErrorString(NET_MODULE,"%-15s FD_READ failed with error %d\n",__FUNCTION__,nErrorCode);
 		return;
 	}
 
@@ -381,7 +385,7 @@ void CClient::OnReceive(int nErrorCode)
 			int nError = GetLastError();
 			if(nError != WSAEWOULDBLOCK)
 			{
-                PutErrorString(NET_MODULE,"%-15s Client OnReceive Socket Error = %d",__FUNCTION__,nError);
+                //PutErrorString(NET_MODULE,"%-15s Client OnReceive Socket Error = %d",__FUNCTION__,nError);
 			}
 			m_pDBAllocator->FreeDB(pDB);
 			return;
@@ -428,7 +432,7 @@ long CClient::GetCurMsgLen()
 			memcpy(pLen+lPos,pDB->Base(),minsize);
 			if(len<=0)
 			{
-                PutErrorString(NET_MODULE,"%-15s 错误，得到消息长度为0,ReadDataBlocksSize:%d,minsize%d",__FUNCTION__,m_ReadDataBlocks.size(),minsize);
+                //PutErrorString(NET_MODULE,"%-15s 错误，得到消息长度为0,ReadDataBlocksSize:%d,minsize%d",__FUNCTION__,m_ReadDataBlocks.size(),minsize);
 			}
 			lPos+=minsize;
 			size -= minsize;
@@ -439,8 +443,8 @@ long CClient::GetCurMsgLen()
 	}
 	if(size > 0)
 	{
-        PutErrorString(NET_MODULE,"%-15s 错误，未取到完整的当前消息长度,m_nReadDataSize:%d,ReadDataBlocksSize:%d,size%",
-            __FUNCTION__,m_nReadDataSize,m_ReadDataBlocks.size(),size);
+        //PutErrorString(NET_MODULE,"%-15s 错误，未取到完整的当前消息长度,m_nReadDataSize:%d,ReadDataBlocksSize:%d,size%",
+        //    __FUNCTION__,m_nReadDataSize,m_ReadDataBlocks.size(),size);
 		len = 0x7FFFFFFF;
 	}
 	return len;
@@ -751,11 +755,11 @@ void DoSocketThread(CClient* pClient)
 
 unsigned __stdcall SocketThread(void* pArguments)
 {
-	PutTraceString(NET_MODULE,"the Client socket thread start.");
+	//PutTraceString(NET_MODULE,"the Client socket thread start.");
 	CClient* pClient = (CClient*) pArguments;
 	if(pClient==NULL)
 	{
-		PutTraceString(NET_MODULE,"the Client socket thread Quit.");
+		//PutTraceString(NET_MODULE,"the Client socket thread Quit.");
 		_endthreadex( 0 );
 		return 0;
 	}
@@ -771,11 +775,11 @@ unsigned __stdcall SocketThread(void* pArguments)
 	}
 	__except(_Sword3::CrashFilter(GetExceptionInformation(),GetExceptionCode()))
 	{
-		PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"网络的客户端工作线程出错，请查看最新的错误报告文件");
+		//PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"网络的客户端工作线程出错，请查看最新的错误报告文件");
 	}
 #endif
 
-	PutTraceString(NET_MODULE,"the Client socket thread Quit.");
+	//PutTraceString(NET_MODULE,"the Client socket thread Quit.");
 	_endthreadex( 0 );
 	return 0;
 }
@@ -935,11 +939,11 @@ void DoNetClientThreadFunc(CClient* pClient)
 //客户端网络主线程 
 unsigned __stdcall NetClientThreadFunc(void* pArguments)
 {
-	PutTraceString(NET_MODULE,"the Client socket Net_main_thread start.");
+	//PutTraceString(NET_MODULE,"the Client socket Net_main_thread start.");
 	CClient* pClient = (CClient*) pArguments;
 	if(pClient==NULL)
 	{
-		PutTraceString(NET_MODULE,"the Client socket Net_main_thread Quit.");
+		//PutTraceString(NET_MODULE,"the Client socket Net_main_thread Quit.");
 		_endthreadex( 0 );
 		return 0;
 	}
@@ -955,11 +959,11 @@ unsigned __stdcall NetClientThreadFunc(void* pArguments)
 	}
 	__except(_Sword3::CrashFilter(GetExceptionInformation(),GetExceptionCode()))
 	{
-		PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"网络的客户端主线程出错!，请查看最新的错误报告文件");
+		//PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"网络的客户端主线程出错!，请查看最新的错误报告文件");
 	}
 #endif
 
-	PutTraceString(NET_MODULE,"the Client socket Net_main_thread Quit.");
+	//PutTraceString(NET_MODULE,"the Client socket Net_main_thread Quit.");
 	_endthreadex( 0 );
 	return 0;
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stdio.h>
+#include "base/DefType.h"
+
 class InputBitStream
 {
 	uchar *m_pData;

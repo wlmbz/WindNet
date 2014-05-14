@@ -1,13 +1,9 @@
-#include "StdAfx.h"
+
 #include "ReadWrite.h"
-#include "assert.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
+using std::string;
+using std::istream;
+using std::ostream;
 
 bool ReadTo(istream& stream, const char* name)
 {

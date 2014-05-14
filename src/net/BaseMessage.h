@@ -9,17 +9,16 @@
  * Modify 2007-4-13,整理了代码和结构，优化了效率
  */
 
-#ifndef _MESSAGE_H_
-#define _MESSAGE_H_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
 #include "MsgQueue.h"
-#include "../DataStream/DataBlock.h"
-#include "../DataStream/DataBlockAllocator.h"
-#include "../DataStream/DataBlockSetWriteRead.h"
+#include "io/DataBlock.h"
+#include "io/DataBlockAllocator.h"
+#include "io/DataBlockSetWriteRead.h"
 
 class CMySocket;
 class CMessage;
@@ -59,8 +58,8 @@ public:
 private:
 
 	//消息的数据部分
-	typedef vector<CDataBlock*>::iterator itMsgData;
-	vector<CDataBlock*> m_MsgData;
+	typedef std::vector<CDataBlock*>::iterator itMsgData;
+    std::vector<CDataBlock*> m_MsgData;
 	
 	//总数据大小
 	
@@ -111,7 +110,7 @@ protected:
 	void* Get(uchar*, ulong size);
 public:
 	void Init(ulong type);
-	void Init(vector<CDataBlock*>& MsgData, const uchar kn[16][6], bool bDecrypt);
+    void Init(std::vector<CDataBlock*>& MsgData, const uchar kn[16][6], bool bDecrypt);
 	void UnInit();
 	//验证消息内容是否合法
 	bool Validate();
@@ -174,8 +173,8 @@ public:
                                }*/
 	void SetTotalSize() { *((long*)Base()) = GetSize()+HEAD_SIZE; }
 
-	vector<CDataBlock*>& GetMsgData() {return m_MsgData;}
-	void SetMsgData(vector<CDataBlock*>& MsgData)	{ UnInit(); m_MsgData=MsgData; }
+    std::vector<CDataBlock*>& GetMsgData() { return m_MsgData; }
+    void SetMsgData(std::vector<CDataBlock*>& MsgData)	{ UnInit(); m_MsgData = MsgData; }
 	void ClearMsgData()		{m_MsgData.clear();}
 
 	void SetRefCount(long lNum)	{ m_lRefCount = lNum; }
@@ -220,20 +219,20 @@ public:
 protected:
 	bool m_bEncrypted;						/// 消息无需加密或已加密
 	ulong m_lMsgTotalSize;			/// 防止加密破坏
-	typedef list<CBaseMessage*>	listBaseMsgs;
-	typedef list<CBaseMessage*>::iterator itBaseMsg;
+    typedef std::list<CBaseMessage*>	listBaseMsgs;
+    typedef std::list<CBaseMessage*>::iterator itBaseMsg;
 	static ulong m_nMaxFreeMsgNum;
 	static listBaseMsgs m_FreeBaseMessages;
 	static CRITICAL_SECTION m_CSFreeMsg;
 
 	//保存消息的相关优先级数据
-	typedef map<long,short>	mapMsgPrioLvlParams;
-	typedef map<long,short>::iterator itMsgPrio;
+    typedef std::map<long, short>	mapMsgPrioLvlParams;
+    typedef std::map<long, short>::iterator itMsgPrio;
 	//保存部分消息的优先级级别
 	static mapMsgPrioLvlParams m_MsgPrioLvl;
 
-	typedef set<long>	setDiscardMsgs;
-	typedef set<long>::iterator itDiscaMsg;
+    typedef std::set<long>	setDiscardMsgs;
+    typedef std::set<long>::iterator itDiscaMsg;
 	//保存可以丢弃的消息类型
 	static setDiscardMsgs m_DiscardMsgs;
 public:
@@ -257,7 +256,7 @@ public:
 	virtual bool IsDiscardFlagEqual(CBaseMessage* pMsg) {return false;}
 
 	static CDataBlockAllocator*	m_pDBAllocator;
-	static set<CBaseMessage*>	TestMsg;
+    static std::set<CBaseMessage*>	TestMsg;
 
 	static bool Initial(CDataBlockAllocator* pDBAllocator,long nMaxFreeMsgNum);
 	static bool Release();
@@ -285,4 +284,3 @@ public:
 	friend class CMsgQueue;
 };
 
-#endif

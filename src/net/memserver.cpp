@@ -1,6 +1,8 @@
 
 #include "MemServer.h"
+#include <process.h>
 #include "BaseMessage.h"
+#include "base/utils.h"
 
 struct ArgList
 {
@@ -100,7 +102,7 @@ unsigned CMemServer::AddServer(DWORD dwID,
 	}
 	else
 	{
-		PutDebugString(NET_MODULE, "内存消息收发线程创建失败, ErrorID: %lu.", GetLastError());
+		//PutDebugString(NET_MODULE, "内存消息收发线程创建失败, ErrorID: %lu.", GetLastError());
 	}
 
 	return dwID;
@@ -186,7 +188,7 @@ bool CMemServer::Run(DWORD dwID)
 						static int lNo = 0;
 						if (++lNo > 100000)
 						{
-							PutDebugString(NET_MODULE, "传送消息错误lastID:%d,curID:%d,错误次数%d.", (*itr).second.lTestID,SmInfoOrder,lNo);
+							//PutDebugString(NET_MODULE, "传送消息错误lastID:%d,curID:%d,错误次数%d.", (*itr).second.lTestID,SmInfoOrder,lNo);
 							lNo = 0;
 						}
 					}
@@ -284,7 +286,7 @@ void CMemServer::OpenFile(DWORD dwID, const char* pszFileName)
 	if (pszFileName == NULL ||
 		strlen(pszFileName) < 4)
 	{
-		PutDebugString(NET_MODULE,"打开文件(%s)出错, 文件名非法.",pszFileName);
+		//PutDebugString(NET_MODULE,"打开文件(%s)出错, 文件名非法.",pszFileName);
 		return;
 	}
 
@@ -336,7 +338,7 @@ CMapFile* CMemServer::GetMapFile(DWORD dwID)
 
 	if (NULL == pMapFile)
 	{
-		PutDebugString(NET_MODULE, "查找MapFile(%u)出错, ErrorID:%lu.", dwID, GetLastError());
+		//PutDebugString(NET_MODULE, "查找MapFile(%u)出错, ErrorID:%lu.", dwID, GetLastError());
 	}
 
 	return pMapFile;

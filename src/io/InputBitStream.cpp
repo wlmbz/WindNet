@@ -1,5 +1,5 @@
-#include "StdAfx.h"
 #include "inputbitstream.h"
+#include <assert.h>
 
 InputBitStream::InputBitStream(void)
 {

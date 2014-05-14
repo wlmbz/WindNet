@@ -1,11 +1,13 @@
-#ifndef _MSG_DESCRIBUTE
+#pragma once
+
 #include <map>
 #include "BaseMessage.h"
+#include "base/DefType.h"
 
 class CMsgDescribe
 {
 private:
-	map<ulong,string>								m_mapMsg;
+    std::map<ulong, std::string>								m_mapMsg;
 
 	CMsgDescribe									();
 	~CMsgDescribe									();
@@ -19,5 +21,3 @@ public:
 
 	const CHAR*				GetDesc					( ulong dwID );
 };
-
-#endif
