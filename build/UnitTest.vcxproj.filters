@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="dep">
+      <UniqueIdentifier>{A75D4BD1-754F-434B-82C2-1E7678484A90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dep\gtest">
+      <UniqueIdentifier>{DF603484-E3C3-024B-B2F5-E7760680872A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dep\gtest\src">
+      <UniqueIdentifier>{7F205CBA-9B04-4149-BBAF-E5A430BBB38B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{8EE698C0-24BA-FC43-A26C-B74872542084}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\dep\gtest\src\gtest-all.cc">
+      <Filter>dep\gtest\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\GuidTest.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\main.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

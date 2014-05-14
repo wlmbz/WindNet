@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{12F81F2A-AA33-8B44-BF60-DB331787AAEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\base">
+      <UniqueIdentifier>{D3B65379-B2B1-114D-8206-E2EB0997CAD1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\io">
+      <UniqueIdentifier>{6898B527-C6EC-774B-AF1E-2EE71EF8C0D9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\net">
+      <UniqueIdentifier>{DEB99B03-AE4D-1F43-A1E1-EC15FC912486}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\base\DefType.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\base\GUID.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\base\logging.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\base\utils.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\io\DataBlock.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\io\DataBlockAllocator.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\io\DataBlockSetWriteRead.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\io\InputBitStream.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\io\OutputBitStream.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\io\ReadWrite.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\BaseMessage.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\Clients.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\ConClient.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\MapFile.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\MemClient.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\MemServer.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\MsgCry.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\MsgDescribe.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\MsgQueue.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\MySocket.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\ServerClient.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\Servers.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\SocketCommands.h">
+      <Filter>src\net</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\base\GUID.cpp">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\io\DataBlock.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\io\DataBlockAllocator.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\io\DataBlockSetWriteRead.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\io\InputBitStream.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\io\OutputBitStream.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\io\ReadWrite.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\BaseMessage.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\Clients.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\ConClient.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\MapFile.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\MemClient.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\memserver.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\MsgCry.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\MsgDescribe.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\MsgQueue.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\MySocket.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\ServerClient.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\Servers.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\SocketCommands.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

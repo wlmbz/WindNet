@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8701594A-72B8-4A6A-AEF3-6B41BBC33E65}</ProjectGuid>
+    <RootNamespace>libNet</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\bin\</OutDir>
+    <IntDir>obj\Debug\libNet\</IntDir>
+    <TargetName>libNet</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\bin\</OutDir>
+    <IntDir>obj\Release\libNet\</IntDir>
+    <TargetName>libNet</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader></PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)libNet.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>DEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  <Lib>
+    <OutputFile>$(OutDir)libNet.lib</OutputFile>
+  </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader></PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)libNet.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_DEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0600;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  <Lib>
+    <OutputFile>$(OutDir)libNet.lib</OutputFile>
+  </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\base\DefType.h" />
+    <ClInclude Include="..\src\base\GUID.h" />
+    <ClInclude Include="..\src\base\logging.h" />
+    <ClInclude Include="..\src\base\utils.h" />
+    <ClInclude Include="..\src\io\DataBlock.h" />
+    <ClInclude Include="..\src\io\DataBlockAllocator.h" />
+    <ClInclude Include="..\src\io\DataBlockSetWriteRead.h" />
+    <ClInclude Include="..\src\io\InputBitStream.h" />
+    <ClInclude Include="..\src\io\OutputBitStream.h" />
+    <ClInclude Include="..\src\io\ReadWrite.h" />
+    <ClInclude Include="..\src\net\BaseMessage.h" />
+    <ClInclude Include="..\src\net\Clients.h" />
+    <ClInclude Include="..\src\net\ConClient.h" />
+    <ClInclude Include="..\src\net\MapFile.h" />
+    <ClInclude Include="..\src\net\MemClient.h" />
+    <ClInclude Include="..\src\net\MemServer.h" />
+    <ClInclude Include="..\src\net\MsgCry.h" />
+    <ClInclude Include="..\src\net\MsgDescribe.h" />
+    <ClInclude Include="..\src\net\MsgQueue.h" />
+    <ClInclude Include="..\src\net\MySocket.h" />
+    <ClInclude Include="..\src\net\ServerClient.h" />
+    <ClInclude Include="..\src\net\Servers.h" />
+    <ClInclude Include="..\src\net\SocketCommands.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\base\GUID.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\io\DataBlock.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\io\DataBlockAllocator.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\io\DataBlockSetWriteRead.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\io\InputBitStream.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\io\OutputBitStream.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\io\ReadWrite.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\BaseMessage.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\Clients.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\ConClient.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\MapFile.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\MemClient.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\memserver.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\MsgCry.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\MsgDescribe.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\MsgQueue.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\MySocket.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\ServerClient.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\Servers.cpp">
+    </ClCompile>
+    <ClCompile Include="..\src\net\SocketCommands.cpp">
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
