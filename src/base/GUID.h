@@ -95,6 +95,17 @@ inline size_t hash_value(const CGUID& guid)
     return seed;
 }
 
+namespace std {
+    template <>
+    struct hash <CGUID>
+    {
+        size_t operator()(const CGUID& key)
+        {
+            return hash_value(key);
+        }
+    };
+}
+
 inline CGUID create_guid()
 {
     CGUID guid;

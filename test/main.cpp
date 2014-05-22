@@ -7,6 +7,8 @@
 
 _INITIALIZE_EASYLOGGINGPP;
 
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "winmm.lib")
 
 class MyTestEnvironment : public testing::Environment
 {
