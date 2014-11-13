@@ -1,12 +1,6 @@
-//********************************************
-//	‘”œ‡∫Ø ˝
-//********************************************
+
 #pragma once
 
-
-#ifndef DELETE_SAFE
-#define DELETE_SAFE(x) do{ delete (x); (x)=NULL; } while(0)
-#endif
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(x) do{ delete (x); (x)=NULL; } while(0)
