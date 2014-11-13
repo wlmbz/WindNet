@@ -18,7 +18,7 @@
 #include <tchar.h>
 #include <assert.h>
 #include "BaseMessage.h"
-#include "base/utils.h"
+#include "base/SafeDelete.h"
 
 
 using namespace std;
@@ -283,7 +283,7 @@ void CMapFile::ReleaseAllFiles(void)
 				fclose(pFileInfo->pFile);
 				pFileInfo->pFile = NULL;
 			}
-			DELETE_SAFE(pFileInfo);
+			SAFE_DELETE(pFileInfo);
 		}
 	}
 
@@ -664,7 +664,7 @@ void CMapFile::ClosePassiveFiles(void)
 
 				fclose(pFileInfo->pFile);
 				pFileInfo->pFile = NULL;
-				DELETE_SAFE(pFileInfo);
+				SAFE_DELETE(pFileInfo);
 				it = m_Files.erase(it);
 			}
 			else
@@ -706,7 +706,7 @@ tagFileInfo0x* CMapFile::AddFile(const char* pszFileName)
 	else
 	{
 		//PutDebugString(NET_MODULE,"Fatal error: AddFile失败！");
-		DELETE_SAFE(pFileInfo);
+		SAFE_DELETE(pFileInfo);
 	}
 
 	return pFileInfo;
@@ -724,7 +724,7 @@ void CMapFile::WriteFile(const char* pszFileName, const char* pszContent)
 		{
 			_snprintf(pszErrorInfo,1024,"文件(%s%s)不存在, 但tagFileInfo0x结构存在, 删除结构.", m_szCurDir, pszFileName);
 			m_Files.erase(pszFileName);
-			DELETE_SAFE(pFileInfo);
+			SAFE_DELETE(pFileInfo);
 		}
 		else
 		{
@@ -791,7 +791,7 @@ void CMapFile::CloseFile(const char* pszFileName)
 				fclose(pFileInfo->pFile);
 				pFileInfo->pFile = NULL;
 			}
-			DELETE_SAFE(pFileInfo);
+			SAFE_DELETE(pFileInfo);
 		}
 
 		m_Files.erase(it);

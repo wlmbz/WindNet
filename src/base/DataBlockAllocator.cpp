@@ -15,7 +15,7 @@
 #include "DataBlockAllocator.h"
 #include "DataBlock.h"
 #include "base/logging.h"
-#include "base/utils.h"
+#include "base/SafeDelete.h"
 
 using namespace std;
 

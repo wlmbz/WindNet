@@ -17,7 +17,7 @@
 #include <process.h>
 #include <assert.h>
 #include "BaseMessage.h"
-#include "base/utils.h"
+#include "base/SafeDelete.h"
 #include "base/Crc32Static.h"
 
 

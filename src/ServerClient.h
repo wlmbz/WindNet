@@ -18,8 +18,7 @@
 
 #include <list>
 #include <vector>
-using namespace std;
-
+#include <map>
 #include "Servers.h"
 
 class CBaseMessage;
@@ -54,20 +53,20 @@ protected:
     CServer*		m_pServers;			//控制的父套接字
     CDataBlockAllocator* m_pDBAllocator;
 
-    typedef list<CBaseMessage*>	 NetMessages;
-    typedef list<CBaseMessage*>::iterator itMsg;
+    typedef std::list<CBaseMessage*>	 NetMessages;
+    typedef std::list<CBaseMessage*>::iterator itMsg;
 
     NetMessages m_SendMessages;
 
-    typedef list<CDataBlock*>	 ListDataBlock;
-    typedef list<CDataBlock*>::iterator itDB;
+    typedef std::list<CDataBlock*>	 ListDataBlock;
+    typedef std::list<CDataBlock*>::iterator itDB;
     ListDataBlock	m_ReadDataBlocks;	//已经读取的网络数据
     int	m_nReadDataSize;				//已经读取数据的大小
 
 
     // 用于顺序读取的变量
-    typedef map<int,CDataBlock*>	DataBlockMap;
-    typedef map<int,CDataBlock*>::iterator itDBMap;
+    typedef std::map<int, CDataBlock*>	DataBlockMap;
+    typedef std::map<int, CDataBlock*>::iterator itDBMap;
     ulong				m_ReadSequenceNumber;
     ulong				m_CurrentReadSequenceNumber;
     DataBlockMap		m_ReadBuffer;

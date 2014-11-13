@@ -1,7 +1,7 @@
 #include "MemClient.h"
 #include "BaseMessage.h"
 #include <process.h>
-#include "base/utils.h"
+#include "base/SafeDelete.h"
 
 bool g_bRun = true;
 
@@ -27,7 +27,7 @@ bool CMemClient::Initial(const char* szMapObjName,
 
 	if( !m_pMapFile->Reset(FMT_Client, szMapObjName) )
 	{
-		DELETE_SAFE(m_pMapFile);
+		SAFE_DELETE(m_pMapFile);
 		return false;
 	}
 	
@@ -57,7 +57,7 @@ bool CMemClient::Release(void)
 	CloseHandle(m_hSendMsgThread);
 	WaitForSingleObject(m_hProcThread, INFINITE);
 	CloseHandle(m_hProcThread);
-	DELETE_SAFE(m_pMapFile);
+	SAFE_DELETE(m_pMapFile);
 
 	long lCount = m_RecvMsgs.GetSize();
 	while( lCount-- > 0 )

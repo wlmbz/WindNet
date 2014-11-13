@@ -2,7 +2,7 @@
 #include "MemServer.h"
 #include <process.h>
 #include "BaseMessage.h"
-#include "base/utils.h"
+#include "base/SafeDelete.h"
 
 struct ArgList
 {
@@ -55,7 +55,7 @@ bool CMemServer::Release(void)
 		CloseHandle(itr->second.hSendMsgThread);
 		WaitForSingleObject(itr->second.hProcThread, INFINITE);
 		CloseHandle(itr->second.hProcThread);
-		DELETE_SAFE(pMapFile);
+		SAFE_DELETE(pMapFile);
 	}
 
 	return true;
@@ -76,7 +76,7 @@ unsigned CMemServer::AddServer(DWORD dwID,
 	tConf.pMapFile->SetDBAllocator(m_pDBAllocator);
 	if( !tConf.pMapFile->Reset(FMT_Server, szMapObj, szMapFile) )
 	{
-		DELETE_SAFE(tConf.pMapFile);
+		SAFE_DELETE(tConf.pMapFile);
 		return 0;
 	}
 

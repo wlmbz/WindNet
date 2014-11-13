@@ -20,9 +20,9 @@
 #include <process.h>
 #include "serverClient.h"
 #include "BaseMessage.h"
-#include "base/utils.h"
+#include "base/SafeDelete.h"
 
-
+using namespace std;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

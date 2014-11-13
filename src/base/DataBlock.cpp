@@ -12,7 +12,7 @@
 
 #include "DataBlock.h"
 #include "base/logging.h"
-#include "base/utils.h"
+#include "base/SafeDelete.h"
 
 CDataBlock::CDataBlock(long maxsize)
 :m_nMaxSize(maxsize)
