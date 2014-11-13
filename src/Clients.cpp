@@ -18,7 +18,7 @@
 #include <assert.h>
 #include "BaseMessage.h"
 #include "base/utils.h"
-#include "io/Crc32Static.h"
+#include "base/Crc32Static.h"
 
 
 using namespace std;
