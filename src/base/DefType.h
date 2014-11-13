@@ -27,3 +27,16 @@ typedef unsigned long long  ulonglong;
 #define LO_UINT_64(l)    ((ulong)(l))
 #define HI_UINT_64(l)    ((ulong)(((ulonglong)(l) >> 32) & 0xFFFFFFFF))
 
+#ifndef _QWORD_DEFINED
+#define _QWORD_DEFINED
+typedef __int64 QWORD, *LPQWORD;
+#endif
+
+#define MAKEQWORD(a, b)	\
+    ((QWORD)(((QWORD)((DWORD)(a))) << 32 | ((DWORD)(b))))
+
+#define LODWORD(l) \
+    ((DWORD)(l))
+#define HIDWORD(l) \
+    ((DWORD)(((QWORD)(l) >> 32) & 0xFFFFFFFF))
+
