@@ -5,7 +5,8 @@
 solution 'WindNet'
     configurations {'Debug', 'Release'}    
     language 'C++'
-    flags {'ExtraWarnings'}
+    platforms {'x32', 'x64'}
+    --flags {'ExtraWarnings'}
     targetdir 'bin'
     
     configuration 'Debug'
@@ -16,21 +17,22 @@ solution 'WindNet'
         defines { 'NDEBUG' }
         flags { 'Symbols', 'Optimize' }
         
-    project 'UnitTest'
-        location 'build'
-        kind 'ConsoleApp'
-        uuid "AB7D1C15-7A44-41a7-8864-230D8E345608"
-        
+    configuration 'vs*'
         defines
         {
-            "WIN32",
-            "_DEBUG",
-            "NOMINMAX",
-            "WIN32_LEAN_AND_MEAN",
-            "_WIN32_WINNT=0x0600",
-            "_SCL_SECURE_NO_WARNINGS",
-            "_CRT_SECURE_NO_WARNINGS",
+            'WIN32',
+            'WIN32_LEAN_AND_MEAN',
+            '_WIN32_WINNT=0x0600',
+            '_CRT_SECURE_NO_WARNINGS',
+            '_SCL_SECURE_NO_WARNINGS',
+            'NOMINMAX',
         }
+        links {'ws2_32', 'winmm', }
+        
+    project 'unittest'
+        location 'build'
+        kind 'ConsoleApp'
+        uuid 'AB7D1C15-7A44-41a7-8864-230D8E345608'
         files 
         {
             'dep/gtest/src/gtest-all.cc',
@@ -39,29 +41,16 @@ solution 'WindNet'
         }
         includedirs
         {
-            "src",
-            "dep/gtest",
-            "dep/gtest/include",
+            'src',
+            'dep/gtest',
+            'dep/gtest/include',
         }
 
-        links "libNet"
+        links 'windnet'
         
-    project 'libNet'
+    project 'windnet'
         location 'build'
         kind 'StaticLib'
-        uuid "8701594A-72B8-4a6a-AEF3-6B41BBC33E65"
-        
-        defines
-        {
-            "WIN32",
-            "_DEBUG",
-            "NOMINMAX",
-            "WIN32_LEAN_AND_MEAN",
-            "_WIN32_WINNT=0x0600",
-            "_SCL_SECURE_NO_WARNINGS",
-            "_CRT_SECURE_NO_WARNINGS",
-        }
-        
         files 
         {
             'src/**.h',
@@ -69,7 +58,7 @@ solution 'WindNet'
         }
         includedirs
         {
-            "src",
+            'src',
         }
 
 
