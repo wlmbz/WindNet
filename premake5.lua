@@ -25,6 +25,7 @@ solution 'WindNet'
             '_WIN32_WINNT=0x0600',
             '_CRT_SECURE_NO_WARNINGS',
             '_SCL_SECURE_NO_WARNINGS',
+            '_WINSOCK_DEPRECATED_NO_WARNINGS',
             'NOMINMAX',
         }
         links {'ws2_32', 'winmm', }
