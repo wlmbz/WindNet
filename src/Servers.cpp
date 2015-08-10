@@ -1200,7 +1200,7 @@ void DoWorkerThreadFunc(CServer* pServer)
 {
     bool bResult;//completion port packet flag
     ulong dwNumRead;//bytes num be readed
-    ULONG CPDataKey;
+    ULONG_PTR CPDataKey;
     LPER_IO_OPERATION_DATA lpPerIOData;
 
     char strTempt[100]="";
