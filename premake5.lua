@@ -3,20 +3,21 @@
 --
 
 solution 'WindNet'
-    configurations {'Debug', 'Release'}    
+    configurations {'Debug', 'Release'}
     language 'C++'
-    platforms {'x32', 'x64'}
+    architecture 'x64'
     --flags {'ExtraWarnings'}
     targetdir 'bin'
-    
+
     configuration 'Debug'
         defines { 'DEBUG' }
         flags { 'Symbols' }
-        
+
     configuration 'Release'
         defines { 'NDEBUG' }
-        flags { 'Symbols', 'Optimize' }
-        
+        flags { 'Symbols' }
+        optimize 'On'
+
     configuration 'vs*'
         defines
         {
@@ -28,13 +29,12 @@ solution 'WindNet'
             '_WINSOCK_DEPRECATED_NO_WARNINGS',
             'NOMINMAX',
         }
-        links {'ws2_32', 'winmm', }
-        
-    project 'unittest'
+
+    project 'UnitTest'
         location 'build'
         kind 'ConsoleApp'
         uuid 'AB7D1C15-7A44-41a7-8864-230D8E345608'
-        files 
+        files
         {
             'dep/gtest/src/gtest-all.cc',
             'test/**.h',
@@ -46,13 +46,17 @@ solution 'WindNet'
             'dep/gtest',
             'dep/gtest/include',
         }
+        links
+        {
+            'ws2_32',
+            'winmm',
+            'libNet'
+        }
 
-        links 'windnet'
-        
-    project 'windnet'
+    project 'libNet'
         location 'build'
         kind 'StaticLib'
-        files 
+        files
         {
             'src/**.h',
             'src/**.cpp',
@@ -61,5 +65,3 @@ solution 'WindNet'
         {
             'src',
         }
-
-
