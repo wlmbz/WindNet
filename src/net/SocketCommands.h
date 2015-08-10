@@ -42,7 +42,7 @@ enum eSocketOperaType
 struct tagSocketOper
 {
 	eSocketOperaType OperaType;
-	ulong	 lSocketID;
+	uint32_t	 lSocketID;
 	char*			 pStrID;					//×Ö·û´®ID
 
 	void*			 pBuf;						//²Ù×÷µÄÄÚÈÝ
@@ -52,7 +52,7 @@ struct tagSocketOper
 	
 	tagSocketOper(){}
 
-	tagSocketOper(eSocketOperaType eOperType,ulong lID,void* pTemptBuf,
+	tagSocketOper(eSocketOperaType eOperType,uint32_t lID,void* pTemptBuf,
 		long lNumber1,long lNumber2=0)
 		:OperaType(eOperType)
 		,lSocketID(lID)
@@ -64,7 +64,7 @@ struct tagSocketOper
 	}
 
 
-	tagSocketOper(eSocketOperaType eOperType,ulong lID,char* pBufID,void* pTemptBuf,
+	tagSocketOper(eSocketOperaType eOperType,uint32_t lID,char* pBufID,void* pTemptBuf,
 		long lNumber1,long lNumber2=0)
 		:OperaType(eOperType)
 		,lSocketID(lID)
@@ -75,7 +75,7 @@ struct tagSocketOper
 	{
 	}
 
-	void Init(eSocketOperaType eOperType,ulong lID,void* pTemptBuf,
+	void Init(eSocketOperaType eOperType,uint32_t lID,void* pTemptBuf,
 		long lNumber1 = 0,long lNumber2=0)
 	{
 		OperaType = eOperType;lSocketID = lID;pBuf=pTemptBuf;

@@ -32,7 +32,7 @@ typedef struct tagDataBlockWriteSet
 	CDataBlockAllocator* pDBAllocator;
 	//当前数据块集合操作参数
 	tagDBOpParam* pDBWriteParam;
-	ulong *pToltalSize;
+	uint32_t *pToltalSize;
 
 	tagDataBlockWriteSet()
 		:pDBAllocator(NULL)
@@ -45,7 +45,7 @@ typedef struct tagDataBlockWriteSet
 	void Initial(CDataBlockAllocator* pAllocator,
 							tagDBOpParam* pWriteParam,
 							std::vector<CDataBlock*>* pSet,
-							ulong* pSize)
+							uint32_t* pSize)
 	{
 		pDBAllocator = pAllocator;
 		pDBWriteParam = pWriteParam;
@@ -58,38 +58,38 @@ typedef struct tagDataBlockWriteSet
 	void AddToByteArray(const CGUID& guid);
 	inline void AddToByteArray(long l)
 	{
-		AddBuff((uchar*)&l,sizeof(long));
+		AddBuff((byte*)&l,sizeof(long));
 	}
 	inline void AddToByteArray(short l)
 	{
-		AddBuff((uchar*)&l,sizeof(short));
+		AddBuff((byte*)&l,sizeof(short));
 	}
 	inline void AddToByteArray(char l)
 	{
-		AddBuff((uchar*)&l,sizeof(char));
+		AddBuff((byte*)&l,sizeof(char));
 	}
 	inline void AddToByteArray(float l)
 	{
-		AddBuff((uchar*)&l,sizeof(float));
+		AddBuff((byte*)&l,sizeof(float));
 	}
 	inline void AddToByteArray(double l)
 	{
-		AddBuff((uchar*)&l,sizeof(double));
+		AddBuff((byte*)&l,sizeof(double));
 	}
-	inline void AddToByteArray(uchar l)
+	inline void AddToByteArray(byte l)
 	{
-		AddBuff((uchar*)&l,sizeof(uchar));
+		AddBuff((byte*)&l,sizeof(byte));
 	}
-	inline void AddToByteArray(ushort l)
+	inline void AddToByteArray(uint16_t l)
 	{
-		AddBuff((uchar*)&l,sizeof(ushort));
+		AddBuff((byte*)&l,sizeof(uint16_t));
 	}
-	inline void AddToByteArray(ulong l)
+	inline void AddToByteArray(uint32_t l)
 	{
-		AddBuff((uchar*)&l,sizeof(ulong));
+		AddBuff((byte*)&l,sizeof(uint32_t));
 	}
 private:
-	void AddBuff(uchar* pBuf, long size);
+	void AddBuff(byte* pBuf, long size);
 	void AddWrDataBlock();
 }DBWriteSet;
 
@@ -122,7 +122,7 @@ typedef struct tagDataBlockReadSet
 	inline long GetLongFromByteArray()
 	{
 		long l = 0;
-		GetBuff((uchar*)&l,sizeof(long));
+		GetBuff((byte*)&l,sizeof(long));
 		return l;
 	}
 
@@ -130,7 +130,7 @@ typedef struct tagDataBlockReadSet
 	inline short GetShortFromByteArray()
 	{
 		short l = 0;
-		GetBuff((uchar*)&l,sizeof(short));
+		GetBuff((byte*)&l,sizeof(short));
 		return l;
 	}
 
@@ -138,47 +138,47 @@ typedef struct tagDataBlockReadSet
 	inline char GetCharFromByteArray()
 	{
 		char l  = 0;
-		GetBuff((uchar*)&l,sizeof(char));
+		GetBuff((byte*)&l,sizeof(char));
 		return l;
 	}
 
 	inline float GetFloatFromByteArray()
 	{
 		float l = 0;
-		GetBuff((uchar*)&l,sizeof(float));
+		GetBuff((byte*)&l,sizeof(float));
 		return l;
 	}
 
 	inline double GetDoubleFromByteArray()
 	{
 		double l = 0;
-		GetBuff((uchar*)&l,sizeof(double));
+		GetBuff((byte*)&l,sizeof(double));
 		return l;
 	}
 	
-	inline uchar GetByteFromByteArray()
+	inline byte GetByteFromByteArray()
 	{
-		uchar l = 0;
-		GetBuff((uchar*)&l,sizeof(uchar));
+		byte l = 0;
+		GetBuff((byte*)&l,sizeof(byte));
 		return l;
 	}
 
-	inline ushort GetWordFromByteArray()
+	inline uint16_t GetWordFromByteArray()
 	{
-		ushort l= 0;
-		GetBuff((uchar*)&l,sizeof(ushort));
+		uint16_t l= 0;
+		GetBuff((byte*)&l,sizeof(uint16_t));
 		return l;
 	}
 
-	inline ulong GetDwordFromByteArray()
+	inline uint32_t GetDwordFromByteArray()
 	{
-		ulong l = 0;
-		GetBuff((uchar*)&l,sizeof(ulong));
+		uint32_t l = 0;
+		GetBuff((byte*)&l,sizeof(uint32_t));
 		return l;
 	}
 
 private:
-	void* GetBuff(uchar* pByte, long size);
+	void* GetBuff(byte* pByte, long size);
 	void AddRdDataBlock();
 
 }DBReadSet;

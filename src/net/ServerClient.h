@@ -46,7 +46,7 @@ protected:
     //是否正在使用中
     bool m_bUsing;
     //使用计数
-    ushort m_nUseCount;
+    uint16_t m_nUseCount;
 
     long m_bServerType;                 //客户端类型 GameServer Or LogingServer
 
@@ -67,8 +67,8 @@ protected:
     // 用于顺序读取的变量
     typedef std::map<int, CDataBlock*>	DataBlockMap;
     typedef std::map<int, CDataBlock*>::iterator itDBMap;
-    ulong				m_ReadSequenceNumber;
-    ulong				m_CurrentReadSequenceNumber;
+    uint32_t				m_ReadSequenceNumber;
+    uint32_t				m_CurrentReadSequenceNumber;
     DataBlockMap		m_ReadBuffer;
 
 public:
@@ -86,7 +86,7 @@ public:
     bool IsTransCong()			{return m_bTransfersStatus;}
     void SetTransCong(bool b)	{m_bTransfersStatus=b;}
 
-    ushort GetUseCount()			{return m_nUseCount;}
+    uint16_t GetUseCount()			{return m_nUseCount;}
     void IncUseCount();
 
     long GetServerType()                { return m_bServerType;}            //获得客户端服务器类型
@@ -147,13 +147,13 @@ private:
     //统计客户端的数据流量
 private:
     //统计接受
-    ulong	m_dwRcvStartTime;					//接受统计开始时间
+    uint32_t	m_dwRcvStartTime;					//接受统计开始时间
     long	m_lCurTotalRcvSize;					//接受包的总大小
     long	m_lCurRcvSizePerSecond;				//当前每秒接受的数据大小
     long	m_lMaxRcvSizePerSecond;				//最大每秒接受大小
 
     //统计发送
-    ulong	m_dwSendStartTime;					//发送统计开始时间
+    uint32_t	m_dwSendStartTime;					//发送统计开始时间
     long	m_lCurTotalSendSize;				//当前总发送大小
     long	m_lCurSendSizePerSecond;			//当前每秒发送大小
     long	m_lMaxSendSizePerSecond;			//每秒最大发送大小
@@ -163,7 +163,7 @@ private:
     long	m_lPendingWrBufNum;					//当前挂起发送缓冲区的总大小
     long	m_lMaxPendingWrBufNum;				//最大挂起发送缓冲区的总大小
     long	m_lMaxPendingRdBufNum;				//挂起的接受缓冲区的总大小
-    ulong	m_lMaxBlockSendMsnNum;				//最大阻塞的发送消息数
+    uint32_t	m_lMaxBlockSendMsnNum;				//最大阻塞的发送消息数
 
     long	m_lSendCounter;
     long	m_lRecvCounter;
@@ -203,7 +203,7 @@ public:
 
     //给读取序列号加1
     void IncrReadSequenceNumber()	{m_ReadSequenceNumber = (m_ReadSequenceNumber+1)%MAXIMUMSEQUENSENUMBER;}
-    ulong GetReadSequenceNumber()	{return m_ReadSequenceNumber;}
+    uint32_t GetReadSequenceNumber()	{return m_ReadSequenceNumber;}
     void IncrCurReadSequenceNumber(){m_CurrentReadSequenceNumber = (m_CurrentReadSequenceNumber+1)%MAXIMUMSEQUENSENUMBER;}
     CDataBlock* GetNextReadDB();
 };

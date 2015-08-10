@@ -47,9 +47,9 @@ public:
 
 	struct stMsg
 	{
-		ulong lSize;		// 消息大小
-		ulong eType;		// 消息类型
-		ulong lVerifyCode;	// 校验码
+		uint32_t lSize;		// 消息大小
+		uint32_t eType;		// 消息类型
+		uint32_t lVerifyCode;	// 校验码
 	};
 
 	////////////////////////////////////////////////////////////////////////
@@ -71,7 +71,7 @@ private:
 	////当前读数据的位置
 	//long	m_nCurRdPos;
 	////当前读数据块的指针
-	//uchar	*m_pRdDBPtr;
+	//byte	*m_pRdDBPtr;
 
 	tagDBOpParam m_WriteParam;
 	////当前写数据块编号
@@ -81,36 +81,36 @@ private:
 	////当前写数据的位置
 	//long	m_nCurWrPos;
 	////当前写数据块的指针
-	//uchar	*m_pWrDBPtr;
+	//byte	*m_pWrDBPtr;
 
 	long	m_lNetFlag;
 	//该消息的优先级别
 	long	m_lPriorityLvl;
 	//开始发送该消息的事件
-	ulong	m_dwStartSendTime;
+	uint32_t	m_dwStartSendTime;
 	//消息的引用计数
 	long m_lRefCount;
 
 protected:
-	uchar* Base()
+	byte* Base()
 	{
 		if(m_MsgData.size() > 0)
 			return m_MsgData[0]->Base();
 		return NULL;
 	}
 
-	uchar* GetMsgBuf()
+	byte* GetMsgBuf()
 	{
 		return m_MsgData[0]->Base()+HEAD_SIZE;
 	}
 	
-	void SetSize(ulong l)	{((stMsg*)GetMsgBuf())->lSize = l;}
+	void SetSize(uint32_t l)	{((stMsg*)GetMsgBuf())->lSize = l;}
 
-	void Add(uchar*, ulong size);
-	void* Get(uchar*, ulong size);
+	void Add(byte*, uint32_t size);
+	void* Get(byte*, uint32_t size);
 public:
-	void Init(ulong type);
-    void Init(std::vector<CDataBlock*>& MsgData, const uchar kn[16][6], bool bDecrypt);
+	void Init(uint32_t type);
+    void Init(std::vector<CDataBlock*>& MsgData, const byte kn[16][6], bool bDecrypt);
 	void UnInit();
 	//验证消息内容是否合法
 	bool Validate();
@@ -120,7 +120,7 @@ public:
 	void AddWrDataBlock();
 	void AddRdDataBlock();
 
-	void SetType(ulong t)
+	void SetType(uint32_t t)
 	{
         if (m_MsgData.empty() ||
             m_MsgData[0]->GetMaxSize() < (HEAD_SIZE+sizeof(stMsg)) )
@@ -128,38 +128,38 @@ public:
 		((stMsg*)GetMsgBuf())->eType = t;
 	}
 
-	//void SetTime(ulong l)
+	//void SetTime(uint32_t l)
 	//{
 	//	if(m_MsgData.size()==0 || m_MsgData[0]->GetMaxSize() < (HEAD_SIZE+sizeof(stMsg)))
 	//		return;	
 	//	((stMsg*)GetMsgBuf())->lTime = l;
 	//}
-	void SetCode(ulong l)
+	void SetCode(uint32_t l)
 	{
 		if (m_MsgData.empty() ||
             m_MsgData[0]->GetMaxSize() < (HEAD_SIZE+sizeof(stMsg)))
             return;	
 		((stMsg*)GetMsgBuf())->lVerifyCode = l;
 	}
-	ulong GetSize()
+	uint32_t GetSize()
 	{
 		if(m_MsgData.size()==0 || m_MsgData[0]->GetMaxSize() < (HEAD_SIZE+sizeof(stMsg)))
 			return 0;	
 		return ((stMsg*)GetMsgBuf())->lSize;
 	}
-	ulong GetType()
+	uint32_t GetType()
 	{
 		if(m_MsgData.size()==0 || m_MsgData[0]->GetMaxSize() < (HEAD_SIZE+sizeof(stMsg)))
 			return 0;	
 		return ((stMsg*)GetMsgBuf())->eType;
 	}
-	/*ulong GetMsgSendTime()
+	/*uint32_t GetMsgSendTime()
       {
       if(m_MsgData.size()==0 || m_MsgData[0]->GetMaxSize() < (HEAD_SIZE+sizeof(stMsg)))
       return 0;	
       return ((stMsg*)GetMsgBuf())->lTime;
       }*/
-	ulong GetCode()
+	uint32_t GetCode()
 	{
 		if(m_MsgData.size()==0 || m_MsgData[0]->GetMaxSize() < (HEAD_SIZE+sizeof(stMsg)))
 			return 0;		
@@ -167,7 +167,7 @@ public:
 	}
 
 	//得到总大小(包括实际消息大小和消息前的附加头)
-	ulong GetTotalSize(void);/*
+	uint32_t GetTotalSize(void);/*
                                {
                                return m_lMsgTotalSize ? m_lMsgTotalSize : (m_lMsgTotalSize = GetSize() + HEAD_SIZE);
                                }*/
@@ -180,20 +180,20 @@ public:
 	void SetRefCount(long lNum)	{ m_lRefCount = lNum; }
 	void AddRefCount(long lNum)	{ m_lRefCount += lNum; }
 	long RemoveRefCount()		{ return --m_lRefCount; }
-	void Encrypt(const uchar kn[16][6]);	/// 对消息进行加密
-	void Decrypt(const uchar kn[16][6]);	/// 对消息进行解密
+	void Encrypt(const byte kn[16][6]);	/// 对消息进行加密
+	void Decrypt(const byte kn[16][6]);	/// 对消息进行解密
 
 	////////////////////////////////////////////////////////////////////////
 	//	添加和获取数据
 	////////////////////////////////////////////////////////////////////////
 public:
 	void Add(char);
-	void Add(uchar);
+	void Add(byte);
 	void Add(short);
-	void Add(ushort);
+	void Add(uint16_t);
 	void Add(long);
 	void Add(LONG64);
-	void Add(ulong);
+	void Add(uint32_t);
 	void Add(float);
 	void Add(const char*);
 	void Add(const CGUID&	guid);
@@ -204,12 +204,12 @@ public:
 
 	
 	char GetChar();
-	uchar GetByte();
+	byte GetByte();
 	short GetShort();
-	ushort GetWord();
+	uint16_t GetWord();
 	long GetLong();
 	LONG64 GetLONG64();
-	ulong GetDWord();
+	uint32_t GetDWord();
 	float GetFloat();
 	bool  GetGUID(CGUID& guid);
 	void* GetEx(void*, long size);
@@ -218,10 +218,10 @@ public:
 	
 protected:
 	bool m_bEncrypted;						/// 消息无需加密或已加密
-	ulong m_lMsgTotalSize;			/// 防止加密破坏
+	uint32_t m_lMsgTotalSize;			/// 防止加密破坏
     typedef std::list<CBaseMessage*>	listBaseMsgs;
     typedef std::list<CBaseMessage*>::iterator itBaseMsg;
-	static ulong m_nMaxFreeMsgNum;
+	static uint32_t m_nMaxFreeMsgNum;
 	static listBaseMsgs m_FreeBaseMessages;
 	static CRITICAL_SECTION m_CSFreeMsg;
 
@@ -239,8 +239,8 @@ public:
 	virtual void SetSocketID(long lSocketID) = 0;
 	virtual long GetSocketID()=0;
 
-	virtual void SetIP(ulong dwIP)=0;
-	virtual ulong GetIP()=0;
+	virtual void SetIP(uint32_t dwIP)=0;
+	virtual uint32_t GetIP()=0;
 
 	virtual void SetIP(const char* pszIP){};
 
@@ -249,9 +249,9 @@ public:
 
 	//设置消息的优先级数据
 	void SetPriorityLvl(long lPrioLvl)	{m_lPriorityLvl=lPrioLvl;}
-	void SetStartSendTime(ulong dwSendTime) {m_dwStartSendTime=dwSendTime;}
+	void SetStartSendTime(uint32_t dwSendTime) {m_dwStartSendTime=dwSendTime;}
 	//得到计算出优先级别值
-	long GetPriorityValue(ulong dwCurTime);
+	long GetPriorityValue(uint32_t dwCurTime);
 	//判断两个消息的丢弃标记是否一样
 	virtual bool IsDiscardFlagEqual(CBaseMessage* pMsg) {return false;}
 

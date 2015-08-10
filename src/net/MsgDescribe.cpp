@@ -32,7 +32,7 @@ CMsgDescribe::CMsgDescribe()
 	{
 		return;
 	}
-	ulong dwMsgID;
+	uint32_t dwMsgID;
 	string strDesc;
 	while( 1 )
 	{
@@ -49,10 +49,10 @@ CMsgDescribe::~CMsgDescribe()
 	m_mapMsg.clear();
 }
 
-const CHAR* CMsgDescribe::GetDesc( ulong dwID )
+const CHAR* CMsgDescribe::GetDesc( uint32_t dwID )
 {
 	static CHAR szID[32];
-	map<ulong, string>::iterator itRet = m_mapMsg.find( dwID );
+	map<uint32_t, string>::iterator itRet = m_mapMsg.find( dwID );
 	if( itRet == m_mapMsg.end() )
 	{
 		sprintf_s( szID, 32, "%d", dwID );

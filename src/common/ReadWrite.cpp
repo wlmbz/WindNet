@@ -31,7 +31,7 @@ bool Read(istream& stream, const char* name, long& data)
 	return false;
 }
 
-bool Read(istream& stream, const char* name, ulong& data)
+bool Read(istream& stream, const char* name, uint32_t& data)
 {
 	if( ReadTo(stream,name) )
 	{
@@ -91,7 +91,7 @@ bool Read(istream& stream, const char* name, char& data)
 	return false;
 }
 
-bool Read(istream& stream, const char* name, uchar& data)
+bool Read(istream& stream, const char* name, byte& data)
 {
 	if( ReadTo(stream,name) )
 	{
@@ -155,7 +155,7 @@ bool Write(ostream& stream, const char* name, short& data)
 	return false;
 }
 
-bool Write(ostream& stream, const char* name, ulong& data)
+bool Write(ostream& stream, const char* name, uint32_t& data)
 {
 	if(name[0])
 	{
@@ -210,7 +210,7 @@ bool Write(ostream& stream, const char* name, char& data)
 	return false;
 }
 
-bool Write(ostream& stream, const char* name, uchar& data)
+bool Write(ostream& stream, const char* name, byte& data)
 {
 	if(name[0])
 	{

@@ -107,23 +107,23 @@ protected:
 	long m_lIndexID;		// 该套Socket分配的ID
 
 	//char m_strIP[32];		// socket IP
-	//ulong m_dwIP;			// IP(4byte)
-	//ulong m_dwPort;			// socket端口
+	//uint32_t m_dwIP;			// IP(4byte)
+	//uint32_t m_dwPort;			// socket端口
 
 	char m_strPeerIP[32];	// 对方的IP
-	ulong m_dwPeerIP;		// IP(4byte)
-	ulong m_dwPeerPort;		// 对方的端口号
+	uint32_t m_dwPeerIP;		// IP(4byte)
+	uint32_t m_dwPeerPort;		// 对方的端口号
 
 	bool m_bClose;			// socket是否关闭
 	bool m_bShutDown;		// 是否shutdown
 
 	long m_lFlag;			// 被逻辑层设置的标志
-	uchar m_key[8];							/// 密钥轮
-	uchar m_kn[16][6];						/// 密钥轮
+	byte m_key[8];							/// 密钥轮
+	byte m_kn[16][6];						/// 密钥轮
 	static long s_lEncryptType;						/// 需要通信加密的类型
 
 public:
-	void GetKn(uchar kn[16][6])  { memcpy(m_kn, kn, 16*6); }
+	void GetKn(byte kn[16][6])  { memcpy(m_kn, kn, 16*6); }
 
 	/// 设置密钥(针对C/S策略不同)
 	void SetKey(int h, int l);
@@ -141,10 +141,10 @@ public:
 	void SetShutDown(bool b)	{m_bShutDown = b;}
 	void SetPeerIP(const char* str)	{ strcpy(m_strPeerIP, str); }
 	char* GetPeerIP(void)		{ return m_strPeerIP; }
-	void SetPeerIP(ulong dw)	{ m_dwPeerIP = dw; }
-	ulong GetDWPeerIP(void)		{ return m_dwPeerIP; }
-	void SetPeerPort(ulong dw)	{ m_dwPeerPort = dw;}
-	ulong GetPeerPort(void)		{ return m_dwPeerPort; }
+	void SetPeerIP(uint32_t dw)	{ m_dwPeerIP = dw; }
+	uint32_t GetDWPeerIP(void)		{ return m_dwPeerIP; }
+	void SetPeerPort(uint32_t dw)	{ m_dwPeerPort = dw;}
+	uint32_t GetPeerPort(void)		{ return m_dwPeerPort; }
 
 	void SetFlag(long lFlag)	{m_lFlag = lFlag;}
 	long GetFlag()				{return m_lFlag;}
@@ -155,12 +155,12 @@ public:
 // [UDP] 接收上一条消息的信息
 //////////////////////////////////////////////////////////////////////////
 protected:
-	ulong m_dwLastRecvPort;		// [UDP] 上一条收到的消息的端口
+	uint32_t m_dwLastRecvPort;		// [UDP] 上一条收到的消息的端口
 	char m_strLastRecvIP[32];	// [UDP] 上一条收到的消息的IP
 
 public:
-	void SetLastRecvPort(ulong w)		{m_dwLastRecvPort = w;}
-	ulong GetLastRecvPort(void)			{return m_dwLastRecvPort;}
+	void SetLastRecvPort(uint32_t w)		{m_dwLastRecvPort = w;}
+	uint32_t GetLastRecvPort(void)			{return m_dwLastRecvPort;}
 	void SetLastRecvIP(const char* str)	{strcpy(m_strLastRecvIP,str);}
 	char* GetLastRecvIP()				{return m_strLastRecvIP;}
 
@@ -194,8 +194,8 @@ public:
 	
 	virtual int Recv(void* lpBuf, int nBufLen, int nFlags = 0);			// [TCP]接收数据
 	virtual int Send(const void* lpBuf, int nBufLen, int nFlags = 0);	// [TCP]发送数据
-	virtual int RecvFrom(void* lpBuf, int nBufLen, char* strIP, ulong& dwPort, int nFlags = 0);		// [UDP]发送数据
-	virtual int Sendto(const void* lpBuf, int nBufLen, const char* strIP, ulong dwPort, int nFlags = 0);	// [UDP]接收数据
+	virtual int RecvFrom(void* lpBuf, int nBufLen, char* strIP, uint32_t& dwPort, int nFlags = 0);		// [UDP]发送数据
+	virtual int Sendto(const void* lpBuf, int nBufLen, const char* strIP, uint32_t dwPort, int nFlags = 0);	// [UDP]接收数据
 
 public:
 	virtual void OnReceive(int nErrorCode)	{};
@@ -212,7 +212,7 @@ public:
 public:
 	bool GetPeerName(char * rPeerAddress, UINT& rPeerPort);		// 获取与套接字相连的地址
 	bool GetSockName(char * rSocketAddress, UINT& rSocketPort);	// 获取本地地址
-	bool IOCtl(long lCommand=FIONREAD, ulong* lpArgument=0);	// 获取现有缓冲区数据的大小
+    bool IOCtl(long lCommand = FIONREAD, u_long* lpArgument = 0);	// 获取现有缓冲区数据的大小
 	
 //////////////////////////////////////////////////////////////////////////
 // SocketThread
@@ -224,4 +224,4 @@ public:
 
 //得到一个ID分配给Socket
 long GetSocketID();
-ulong STR2UL(const char *szIP);
+uint32_t STR2UL(const char *szIP);

@@ -19,7 +19,7 @@ CDataBlock::CDataBlock(long maxsize)
 ,m_nCurSize(0)
 ,m_bInitData(false)
 {
-	m_pBase = new uchar[maxsize];
+	m_pBase = new byte[maxsize];
     CHECK(NULL != m_pBase) << "在函数CDataBlock::CDataBlock(...),分配内存出错。";
 }
 

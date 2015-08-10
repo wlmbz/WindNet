@@ -150,7 +150,7 @@ bool CMySocket::Bind(UINT nSocketPort, LPCTSTR lpszSocketAddress)
 	}
 	else
 	{
-		ulong lResult = inet_addr(lpszAscii);
+		uint32_t lResult = inet_addr(lpszAscii);
 		if (lResult == INADDR_NONE)
 		{
 			WSASetLastError(WSAEINVAL);
@@ -275,7 +275,7 @@ int CMySocket::Send(const void* lpBuf, int nBufLen, int nFlags)
 
 
 // [UDP] 发送数据
-int CMySocket::RecvFrom(void* lpBuf, int nBufLen, char* strIP, ulong& dwPort, int nFlags )
+int CMySocket::RecvFrom(void* lpBuf, int nBufLen, char* strIP, uint32_t& dwPort, int nFlags )
 {
 	sockaddr_in addr;
 	memset(&addr, 0, sizeof(addr));
@@ -298,7 +298,7 @@ int CMySocket::RecvFrom(void* lpBuf, int nBufLen, char* strIP, ulong& dwPort, in
 }
 
 // [UDP] 接收数据
-int CMySocket::Sendto(const void* lpBuf, int nBufLen, const char* strIP, ulong dwPort, int nFlags)
+int CMySocket::Sendto(const void* lpBuf, int nBufLen, const char* strIP, uint32_t dwPort, int nFlags)
 {
 	sockaddr_in addr;
 	memset(&addr, 0, sizeof(addr));
@@ -350,7 +350,7 @@ bool CMySocket::GetSockName(char* rSocketAddress, UINT& rSocketPort)
 }
 
 // 获取现有缓冲区数据的大小
-bool CMySocket::IOCtl(long lCommand, ulong* lpArgument)
+bool CMySocket::IOCtl(long lCommand, u_long* lpArgument)
 {
 	int rt = ioctlsocket(m_hSocket,lCommand,lpArgument);
 	if (rt == SOCKET_ERROR)
@@ -367,7 +367,7 @@ long GetSocketID()
 	return ++lSocketID;
 }
 
-unsigned long STR2UL(const char *szIP)
+uint32_t STR2UL(const char *szIP)
 {
 	return inet_addr(szIP);
 }
@@ -375,8 +375,8 @@ unsigned long STR2UL(const char *szIP)
 /// 设置密钥(针对CServerClient & CClients & 机器人测试使用)
 void CMySocket::SetKey(int h, int l)
 {
-	*((ulong*)m_key) = h;
-	*((ulong*)m_key+1) = l;
+	*((uint32_t*)m_key) = h;
+	*((uint32_t*)m_key+1) = l;
 
 	::KeyInit(m_key, m_kn);
 }

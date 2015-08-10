@@ -21,15 +21,15 @@ using namespace std;
 	// 添加数据
 void tagDataBlockWriteSet::AddToByteArray(void* pSource, long n)
 {
-	//AddBuff((uchar*)&n,sizeof(long));
-	AddBuff((uchar*)pSource,n);
+	//AddBuff((byte*)&n,sizeof(long));
+	AddBuff((byte*)pSource,n);
 }
 
 void tagDataBlockWriteSet::AddToByteArray(const char* pStr)
 {
 	long size = lstrlen(pStr);
-	AddBuff((uchar*)&size,sizeof(long));
-	AddBuff((uchar*)pStr,size);
+	AddBuff((byte*)&size,sizeof(long));
+	AddBuff((byte*)pStr,size);
 }
 
 void tagDataBlockWriteSet::AddToByteArray(const CGUID& guid)
@@ -39,11 +39,11 @@ void tagDataBlockWriteSet::AddToByteArray(const CGUID& guid)
 	{
 		size = 0;
 	}
-	AddBuff((uchar*)&size,1);
-	AddBuff((uchar*)&guid,size);
+	AddBuff((byte*)&size,1);
+	AddBuff((byte*)&guid,size);
 }
 
-void tagDataBlockWriteSet::AddBuff(uchar* pBuf, long size)
+void tagDataBlockWriteSet::AddBuff(byte* pBuf, long size)
 {
 	long lTempSize = size;
 	while(pDBWriteParam->pDBPtr != NULL && size > 0)
@@ -84,7 +84,7 @@ void tagDataBlockWriteSet::AddWrDataBlock()
 
 void* tagDataBlockReadSet::GetBufferFromByteArray(void* pBuf, long lLen)
 {
-	GetBuff((uchar*)pBuf,lLen);
+	GetBuff((byte*)pBuf,lLen);
 	return pBuf;
 }
 char* tagDataBlockReadSet::GetStringFromByteArray(char* pStr, long lMaxLen)
@@ -93,14 +93,14 @@ char* tagDataBlockReadSet::GetStringFromByteArray(char* pStr, long lMaxLen)
 	long len = GetLongFromByteArray();
 	if(len < 0)	len = 0;
 	len = min(len,lMaxLen-1);
-	GetBuff((uchar*)pStr,len);
+	GetBuff((byte*)pStr,len);
 	pStr[len] = '\0';
 	return pStr;
 }
 bool  tagDataBlockReadSet::GetBufferFromByteArray(CGUID& guid)
 {
 	long size = 0;
-	GetBuff((uchar*)&size,1);
+	GetBuff((byte*)&size,1);
 	if(size == 0)
 	{
 		guid = CGUID::GUID_INVALID;
@@ -108,13 +108,13 @@ bool  tagDataBlockReadSet::GetBufferFromByteArray(CGUID& guid)
 	}
 	else
 	{
-		GetBuff((uchar*)&guid,sizeof(CGUID));
+		GetBuff((byte*)&guid,sizeof(CGUID));
 		return true;
 	}
 	return true;
 }
 
-void* tagDataBlockReadSet::GetBuff(uchar* pByte, long size)
+void* tagDataBlockReadSet::GetBuff(byte* pByte, long size)
 {
 	/*char str[1024];
 	sprintf(str,"Get(...) 开始!size:%d,",size);

@@ -34,19 +34,19 @@ const int MAX_CLIENTS = 2048;
 class CServer : public CMySocket
 {
 private:
-	uchar	m_bMode;	//启动模式
+	byte	m_bMode;	//启动模式
 
 	typedef std::list<tagSocketOper*>	SocketOpers;
     typedef std::list<tagSocketOper*>::iterator itSockOP;
 
-	uint m_nMaxFreeSockOperNum;
+	uint32_t m_nMaxFreeSockOperNum;
 	SocketOpers	m_FreeSocketOpers;
 	CRITICAL_SECTION	m_CSSockOper;
 
     typedef std::list<PER_IO_OPERATION_DATA*>	ListIOOpers;
     typedef std::list<PER_IO_OPERATION_DATA*>::iterator itIOOper;
 
-	uint m_nMaxFreeIOOperNum;
+	uint32_t m_nMaxFreeIOOperNum;
 	ListIOOpers	m_FreeListIOOpers;
 	CRITICAL_SECTION	m_CSIOOper;
 
@@ -64,7 +64,7 @@ private:
 	long	m_lIOOperDataBufNum;
 public:
 	//启动网络服务器
-	bool	Start(	uchar bMode,CDataBlockAllocator* pDBAllocator,
+	bool	Start(	byte bMode,CDataBlockAllocator* pDBAllocator,
 					long nMaxFreeSockOperNum = 100,long nMaxFreeIOOperNum=100,long lIOOperDataBufNum = 2,
 					bool bCheck=false,long lForbidTime=1000,
 					long lMaxMsgLen=102400,long lMaxConNums=1000,long lTotalClientsNum=10,
@@ -129,7 +129,7 @@ public:
 	HANDLE* GetWorkerThread()	{ return &m_hWorkerThreads[0];}
 	HANDLE GetAcceptThread()	{ return m_hAcceptThread; }
 	// 创建Server的套接字，进入监听状态，等待客户端的连接
-	bool Host(UINT dwPort, const char* strIP,long lFlag,ulong nSocketType=SOCK_STREAM);
+	bool Host(UINT dwPort, const char* strIP,long lFlag,uint32_t nSocketType=SOCK_STREAM);
 	bool Listen(int nConnectionBacklog=SOMAXCONN);			// listen
 
 
@@ -159,7 +159,7 @@ public:
 	bool CreateNetMainThread();					//创建网络主线程
 	bool CreateWorkerThreads(int nProcNum);		//创建在完成端口上等待的工作者线程
 	bool CreateAcceptThread();					//创建接收客户Socket的线程
-	bool AssociateSocketWithCP(SOCKET socket,ulong dwCompletionKey);	//用于邦定一个SOCKET到完成端口
+	bool AssociateSocketWithCP(SOCKET socket,uint32_t dwCompletionKey);	//用于邦定一个SOCKET到完成端口
 
 	CServer();
 	virtual ~CServer();
@@ -203,9 +203,9 @@ protected:
 	//针对各种连接的数据统计
 	struct tagDataStat
 	{
-		ulong dwSendStartTime;			//统计开始时间
+		uint32_t dwSendStartTime;			//统计开始时间
 		long lTotalSendSize;			//发送的总数量
-		ulong dwRecvStartTime;			//统计开始时间
+		uint32_t dwRecvStartTime;			//统计开始时间
 		long lTotalRecvSize;			//接受总数量
 	};
 
@@ -236,25 +236,25 @@ protected:
 	CRITICAL_SECTION	m_CSMsgStat;
 
 	
-    std::map<u_long, ulong>	m_ForbidIPs;				//屏蔽IP列表
-	ulong				m_lMaxBlockConnetNum;		//最大的阻塞监听数量
-	ulong				m_lSendInterTime;			//建立连接以后到接受到数据的最大间隔事件
+    std::map<u_long, uint32_t>	m_ForbidIPs;				//屏蔽IP列表
+	uint32_t				m_lMaxBlockConnetNum;		//最大的阻塞监听数量
+	uint32_t				m_lSendInterTime;			//建立连接以后到接受到数据的最大间隔事件
 
-	ulong				m_dwWorkThreadTick;			//完成端口工作线程心跳计数
-	ulong				m_dwNetThreadTick;			//网络线程心跳计数
-	ulong				m_dwAcceptThreadTick;		//监听接受线程心跳计数
+	uint32_t				m_dwWorkThreadTick;			//完成端口工作线程心跳计数
+	uint32_t				m_dwNetThreadTick;			//网络线程心跳计数
+	uint32_t				m_dwAcceptThreadTick;		//监听接受线程心跳计数
 	
 
-    std::map<ulong, ulong>	g_NewAcceptSockets;
+    std::map<uint32_t, uint32_t>	g_NewAcceptSockets;
 public:
 
 	inline void IncWorkThreadTick()	{m_dwWorkThreadTick++;}
 	inline void IncNetThreadTick()	{m_dwNetThreadTick++;}
 	inline void IncAcceptThreadTick()	{m_dwAcceptThreadTick++;}
 
-	ulong	GetWorkThreadTick()	{return m_dwWorkThreadTick;}
-	ulong	GetNetThreadTick()	{return m_dwNetThreadTick;}
-	ulong	GetAcceptThreadTick() {return m_dwAcceptThreadTick;}
+	uint32_t	GetWorkThreadTick()	{return m_dwWorkThreadTick;}
+	uint32_t	GetNetThreadTick()	{return m_dwNetThreadTick;}
+	uint32_t	GetAcceptThreadTick() {return m_dwAcceptThreadTick;}
 
 	bool	GetCheck()	{ return m_bCheck; }
 	long	GetMaxMsgLen()		{ return m_lMaxMessageLength; }
@@ -273,7 +273,7 @@ public:
 	//添加接受消息数据统计
 	void	AddRecvMsgStat(long lMsgType,long lSize);
 	//输出消息统计信息到net.log文件
-	void	OutputMsgStatInfo(ulong lIntelTime =1800000);
+	void	OutputMsgStatInfo(uint32_t lIntelTime =1800000);
 
 	long	GetMaxConNum()				{return m_lMaxClientConNum;}
 	long	GetPendingWrBufNum()		{return m_lPendingWrBufNum;}
@@ -285,8 +285,8 @@ public:
 	void	SetParamEx(long lBlockConNum,long lSendInterTime)
 	{m_lMaxBlockConnetNum=lBlockConNum;m_lSendInterTime=lSendInterTime;}
 
-	void	AddNewAcceptSocket(ulong dwSocketID);
-	void	RemoveNewAcceptSocket(ulong dwSocketID);
+	void	AddNewAcceptSocket(uint32_t dwSocketID);
+	void	RemoveNewAcceptSocket(uint32_t dwSocketID);
 	void	DoNewAcceptSocket();
 
 
@@ -297,9 +297,9 @@ private:
 	
 public:	
 	//主动连接服务器
-	long Connect(LPCTSTR lpszHostAddress, UINT nHostPort,long lFlag,ulong dwTimeOut=0);
+	long Connect(LPCTSTR lpszHostAddress, UINT nHostPort,long lFlag,uint32_t dwTimeOut=0);
 	//阻塞连接
-	long Connect(CServerClient* pConClient,LPCTSTR lpszHostAddress, UINT nHostPort,ulong dwTimeOut=0);
+	long Connect(CServerClient* pConClient,LPCTSTR lpszHostAddress, UINT nHostPort,uint32_t dwTimeOut=0);
 	//主动关闭连接
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

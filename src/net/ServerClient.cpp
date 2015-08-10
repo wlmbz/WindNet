@@ -187,8 +187,8 @@ bool CServerClient::ReadFromCompletionPort(PER_IO_OPERATION_DATA* pIOData,CDataB
     pIOData->pDataBuf[0].buf = (char*)pDB->Base();
     pIOData->OperationType = SOT_Receive;
     pIOData->m_nSequenceNumber = m_ReadSequenceNumber;
-    ulong dwFlag = 0;
-    ulong dwReceivByte;
+    DWORD dwFlag = 0;
+    DWORD dwReceivByte;
     int nRet = WSARecv(m_hSocket,pIOData->pDataBuf,1,&dwReceivByte,&dwFlag,&(pIOData->OverLapped),NULL);
     if(nRet == SOCKET_ERROR)
     {
@@ -249,7 +249,7 @@ void CServerClient::SendZeroByteData()
     if(NULL == pPerIOData) return;
     memset( &pPerIOData->OverLapped,0,sizeof(OVERLAPPED) );
     pPerIOData->OperationType = SOT_SendZeroByte;
-    bool bSuccess = PostQueuedCompletionStatus(m_pServers->m_hCompletionPort,0,(ulong)GetIndexID(),(OVERLAPPED*)pPerIOData) ? true : false;
+    bool bSuccess = PostQueuedCompletionStatus(m_pServers->m_hCompletionPort,0,(uint32_t)GetIndexID(),(OVERLAPPED*)pPerIOData) ? true : false;
     if( !bSuccess && WSAGetLastError() != ERROR_IO_PENDING )
     {
         //PutErrorString(NET_MODULE,"%-15sCServerClient::SendZeroByteData().PostQueuedCompletionStatus .erros(errid:%d).",__FUNCTION__,WSAGetLastError());
@@ -310,7 +310,7 @@ int CServerClient::Send(CBaseMessage *pMsg,int nFlags)
         return true;
     }
 
-    ulong dwSentNum = 0;
+    DWORD dwSentNum = 0;
     int ret = WSASend(m_hSocket, pPerIOData->pDataBuf, lBlockSize, &dwSentNum, nFlags,
         (OVERLAPPED*)pPerIOData, NULL);
 
@@ -355,7 +355,7 @@ bool CServerClient::AddSendMsg(CBaseMessage* pMsg)
     }
 
     //OnTransferChange();
-    //ulong dwCurTime = timeGetTime();
+    //uint32_t dwCurTime = timeGetTime();
     //long lCurMsgPri = pMsg->GetPriorityValue(dwCurTime);
     ////该消息类型是否可以丢弃
     //bool bDiscard = CBaseMessage::GetIsDiscard(pMsg->GetType());
@@ -656,7 +656,7 @@ void CServerClient::OnReceive(int nErrorCode)
 
 void CServerClient::OnAccept(int errorCode)
 {
-    ulong dwPeerIP = GetDWPeerIP();
+    uint32_t dwPeerIP = GetDWPeerIP();
     CBaseMessage* pMsg = CBaseMessage::AllocMsg();
     pMsg->Init(BASEMSG_Socket_Accept);
     pMsg->SetNetFlag(GetFlag());
@@ -724,8 +724,8 @@ long	CServerClient::AddRecvSize(long lSize)
     //当数据累计达到一定数量的时候,重置统计数据
     if( m_lCurTotalRcvSize >= (m_lMaxRcvSizePerSecond<<2) )
     {
-        ulong dwCurTime = timeGetTime();
-        ulong dwDifTime = dwCurTime - m_dwRcvStartTime;
+        uint32_t dwCurTime = timeGetTime();
+        uint32_t dwDifTime = dwCurTime - m_dwRcvStartTime;
         if(dwDifTime ==0)	dwDifTime = 1;
         //计算每秒平均接受大小
         m_lCurRcvSizePerSecond = m_lCurTotalRcvSize*1000/dwDifTime;
@@ -739,7 +739,7 @@ long CServerClient::AddSendSize(long lSize)
 {
     m_pServers->AddSendSize(GetFlag(),lSize);
 
-    ulong dwCurTime = timeGetTime();
+    uint32_t dwCurTime = timeGetTime();
     if(dwCurTime - m_dwSendStartTime >= 30000)
     {
         m_dwSendStartTime = dwCurTime;
@@ -759,7 +759,7 @@ long CServerClient::GetCurRecvSizePerSecond()
 //得到当前每秒发送大小
 long CServerClient::GetCurSendSizePerSecond()
 {
-    ulong dwDifTime = timeGetTime()-m_dwSendStartTime;
+    uint32_t dwDifTime = timeGetTime()-m_dwSendStartTime;
     if(dwDifTime ==0)	dwDifTime = 1;
     //计算每秒平均接受大小
     m_lCurSendSizePerSecond = m_lCurTotalSendSize*1000/dwDifTime;

@@ -29,7 +29,7 @@ using namespace std;
 CDataBlockAllocator* CBaseMessage::m_pDBAllocator = NULL;
 std::set<CBaseMessage*>	CBaseMessage::TestMsg;
 
-ulong CBaseMessage::m_nMaxFreeMsgNum = 0;
+uint32_t CBaseMessage::m_nMaxFreeMsgNum = 0;
 CBaseMessage::listBaseMsgs CBaseMessage::m_FreeBaseMessages;
 CRITICAL_SECTION CBaseMessage::m_CSFreeMsg;
 CBaseMessage::NEWMSG CBaseMessage::NewMsg;
@@ -59,7 +59,7 @@ CBaseMessage::~CBaseMessage()
 {
 }
 
-void CBaseMessage::Init(unsigned long type)
+void CBaseMessage::Init(uint32_t type)
 {
     m_lNetFlag = 0;
     m_lPriorityLvl = GetMsgPrio(type);
@@ -208,7 +208,7 @@ bool CBaseMessage::Initial(CDataBlockAllocator* pDBAllocator,long nMaxFreeMsgNum
     m_pDBAllocator = pDBAllocator;
     InitializeCriticalSection(&m_CSFreeMsg);
     m_nMaxFreeMsgNum = nMaxFreeMsgNum;
-    ulong i = 0;
+    uint32_t i = 0;
     for(;i< m_nMaxFreeMsgNum;i++)
     {
         CBaseMessage *pMsg = NewMsg();
@@ -306,9 +306,9 @@ void CBaseMessage::Add(LONG64 l)
     Add( (BYTE*)&l,sizeof(LONG64) );
 }
 
-void CBaseMessage::Add(ulong l)
+void CBaseMessage::Add(uint32_t l)
 {
-    Add( (BYTE*)&l,sizeof(ulong) );
+    Add( (BYTE*)&l,sizeof(uint32_t) );
 }
 
 void CBaseMessage::Add(float l)
@@ -335,14 +335,14 @@ void CBaseMessage::Add(const CGUID&	guid)
         Add((BYTE*)&guid,size);
 }
 
-void CBaseMessage::Add(BYTE* pBuf, ulong size)
+void CBaseMessage::Add(BYTE* pBuf, uint32_t size)
 {
     long lTempSize = size;
     while(m_WriteParam.pDBPtr != NULL && size > 0)
     {
         if(m_WriteParam.nCurDBSize >= m_WriteParam.nCurPos)
         {
-            ulong minsize = min(size,m_WriteParam.nCurDBSize-m_WriteParam.nCurPos);
+            uint32_t minsize = min(size,m_WriteParam.nCurDBSize-m_WriteParam.nCurPos);
             memcpy(m_WriteParam.pDBPtr+m_WriteParam.nCurPos,pBuf,minsize);
             m_WriteParam.nCurPos += minsize;
             m_MsgData[m_WriteParam.nCurNum]->SetCurSize(m_WriteParam.nCurPos);
@@ -421,10 +421,10 @@ LONG64 CBaseMessage::GetLONG64()
     return l;
 }
 
-ulong CBaseMessage::GetDWord()
+uint32_t CBaseMessage::GetDWord()
 {
-    ulong l = 0;
-    Get((BYTE*)&l,sizeof(ulong));
+    uint32_t l = 0;
+    Get((BYTE*)&l,sizeof(uint32_t));
     return l;
 }
 
@@ -468,13 +468,13 @@ bool CBaseMessage::GetDBReadSet(tagDataBlockReadSet& DBReadSet)
 }
 
 
-void* CBaseMessage::Get(BYTE* pBuf, ulong size)
+void* CBaseMessage::Get(BYTE* pBuf, uint32_t size)
 {
     while(m_ReadParam.pDBPtr != NULL && size > 0)
     {
         if(m_ReadParam.nCurDBSize >= m_ReadParam.nCurPos)
         {
-            ulong minsize = min(size,m_ReadParam.nCurDBSize-m_ReadParam.nCurPos);
+            uint32_t minsize = min(size,m_ReadParam.nCurDBSize-m_ReadParam.nCurPos);
             memcpy(pBuf, m_ReadParam.pDBPtr+m_ReadParam.nCurPos, minsize);
             size -= minsize;
             m_ReadParam.nCurPos += minsize;
@@ -524,9 +524,9 @@ short CBaseMessage::GetMsgPrio(long lMsgType)
 }
 
 //得到计算出优先级别值
-long CBaseMessage::GetPriorityValue(ulong dwCurTime)
+long CBaseMessage::GetPriorityValue(uint32_t dwCurTime)
 {
-    ulong dwDifTime = dwCurTime-m_dwStartSendTime;
+    uint32_t dwDifTime = dwCurTime-m_dwStartSendTime;
     return (m_lPriorityLvl << 10) + dwDifTime;
 }
 
@@ -573,7 +573,7 @@ void CBaseMessage::Decrypt(const unsigned char kn[16][6])
 }
 
 //得到总大小(包括实际消息大小和消息前的附加头)
-unsigned long CBaseMessage::GetTotalSize(void)
+uint32_t CBaseMessage::GetTotalSize(void)
 {
     return m_lMsgTotalSize ? m_lMsgTotalSize : (m_lMsgTotalSize = GetSize() + HEAD_SIZE);
 }

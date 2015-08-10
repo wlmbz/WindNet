@@ -151,7 +151,7 @@ bool CClient::Start(CDataBlockAllocator* pDBAllocator,long nMaxFreeSockOperNum,l
 	}
 	//预分配命令操作结构
 	InitializeCriticalSection(&m_CSSockOper);
-	ulong i = 0;
+	uint32_t i = 0;
 	for(;i<m_nMaxFreeSockOperNum;i++)
 	{
 		tagSocketOper* pSockOper = new tagSocketOper();
@@ -671,8 +671,8 @@ long	CClient::AddSendSize(long lSize)
 	//当数据累计达10M的时候开始统计
 	if(m_lTotalSendSize >= 10485760)
 	{
-		ulong dwTime = timeGetTime();
-		ulong Time = dwTime-m_dwSendStartTime;
+		uint32_t dwTime = timeGetTime();
+		uint32_t Time = dwTime-m_dwSendStartTime;
 		if(Time >= 1)
 		{
 			m_lSendSizePerSecond = m_lTotalSendSize*1000/Time;
@@ -690,8 +690,8 @@ long	CClient::AddRecvSize(long lSize)
 	//当数据累计达10M的时候开始统计
 	if(m_lTotalRecvSize >= 10485760)
 	{
-		ulong dwTime = timeGetTime();
-		ulong Time = dwTime-m_dwRecvStartTime;
+		uint32_t dwTime = timeGetTime();
+		uint32_t Time = dwTime-m_dwRecvStartTime;
 		if(Time >= 1)
 		{
 			m_lRecvSizePerSecond = m_lTotalRecvSize*1000/Time;

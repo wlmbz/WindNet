@@ -119,7 +119,7 @@ bool	CServer::Start(BYTE bMode,CDataBlockAllocator* pDBAllocator,
     InitializeCriticalSection(&m_CSSockOper);
     InitializeCriticalSection(&m_CSMsgStat);
 
-    uint i = 0;
+    uint32_t i = 0;
     for(;i<m_nMaxFreeSockOperNum;i++)
     {
         tagSocketOper* pSockOper = new tagSocketOper();
@@ -183,7 +183,7 @@ bool	CServer::Start(BYTE bMode,CDataBlockAllocator* pDBAllocator,
 }
 
 // 创建 Listen Socket，进入监听状态，等待客户端的连接
-bool CServer::Host(UINT dwPort, const char* strIP,long lFlag, ulong nSocketType)
+bool CServer::Host(UINT dwPort, const char* strIP,long lFlag, uint32_t nSocketType)
 {
     if(!(m_bMode&2))	return FALSE;
 
@@ -258,7 +258,7 @@ bool CServer::CreateNetMainThread()
 //创建在完成端口上等待的工作者线程
 bool CServer::CreateWorkerThreads(int nProcNum)
 {
-    //	ulong dwThreadId;
+    //	uint32_t dwThreadId;
     if(nProcNum>=2)
         nProcNum = nProcNum/2;
 
@@ -354,7 +354,7 @@ void CServer::ExitWorkerThread(void)
         PostQueuedCompletionStatus(m_hCompletionPort,0,0,0);
     }
 
-    WaitForMultipleObjects((ulong)m_hWorkerThreads.size(),&m_hWorkerThreads[0],TRUE,INFINITE);	
+    WaitForMultipleObjects((uint32_t)m_hWorkerThreads.size(),&m_hWorkerThreads[0],TRUE,INFINITE);	
 
 
     //发送退出主线程操作命令
@@ -457,7 +457,7 @@ void CServer::OnAccept(int nErrorCode)
 
     if(clientSocket==INVALID_SOCKET)
     {
-        ulong dwEorror = WSAGetLastError();
+        uint32_t dwEorror = WSAGetLastError();
         return;
     }
 
@@ -703,7 +703,7 @@ int CServer::ASend(long lIndexID,CBaseMessage *pMsg)
 }
 
 // 用于邦定一个SOCKET到完成端口
-bool CServer::AssociateSocketWithCP(SOCKET socket,ulong dwCompletionKey)
+bool CServer::AssociateSocketWithCP(SOCKET socket,uint32_t dwCompletionKey)
 {
     if(m_hCompletionPort == NULL)
     {
@@ -713,7 +713,7 @@ bool CServer::AssociateSocketWithCP(SOCKET socket,ulong dwCompletionKey)
     HANDLE hHanle = CreateIoCompletionPort((HANDLE)socket, m_hCompletionPort, dwCompletionKey, 0);
     if(hHanle == NULL)
     {
-        ulong dwErrorID = GetLastError();
+        uint32_t dwErrorID = GetLastError();
         //PutErrorString(NET_MODULE,"%-15s在函数 CServer::AssociateSocketWithCP(...)里.邦定一个Socket到完成端口出错(ErrorID:%d)",__FUNCTION__,dwErrorID);
         return false;
     }
@@ -778,11 +778,11 @@ void	CServer::AddForbidIP(u_long laddr)
 
 bool	CServer::FindForbidIP(u_long laddr)
 {
-    map<u_long,ulong>::iterator it = m_ForbidIPs.find(laddr);
+    map<u_long,uint32_t>::iterator it = m_ForbidIPs.find(laddr);
     if(it != m_ForbidIPs.end())
     {
-        ulong dwTime = timeGetTime();
-        if(dwTime-(*it).second <= (ulong)m_lForbidTime)
+        uint32_t dwTime = timeGetTime();
+        if(dwTime-(*it).second <= (uint32_t)m_lForbidTime)
         {
             return true;
         }
@@ -829,8 +829,8 @@ long	CServer::GetSendSizePerSecond(long lFlagID)
     if(it != m_NetDataStats.end() )
     {
         tagDataStat &dataState = (*it).second;
-        ulong dwCurTime = timeGetTime();
-        ulong DifTime = dwCurTime-dataState.dwSendStartTime;
+        uint32_t dwCurTime = timeGetTime();
+        uint32_t DifTime = dwCurTime-dataState.dwSendStartTime;
         if(DifTime == 0) DifTime = 1;
         long lSendSizePerSecond = dataState.lTotalSendSize*1000/DifTime;
         dataState.dwSendStartTime = dwCurTime;
@@ -846,8 +846,8 @@ long	CServer::GetRecvSizePerSecond(long lFlagID)
     if(it != m_NetDataStats.end() )
     {
         tagDataStat &dataState = (*it).second;
-        ulong dwCurTime = timeGetTime();
-        ulong DifTime = dwCurTime-dataState.dwRecvStartTime;
+        uint32_t dwCurTime = timeGetTime();
+        uint32_t DifTime = dwCurTime-dataState.dwRecvStartTime;
         if(DifTime == 0) DifTime = 1;
 
         long lRecvSizePerSecond = dataState.lTotalRecvSize*1000/DifTime;
@@ -915,11 +915,11 @@ void	CServer::AddRecvMsgStat(long lMsgType,long lSize)
 
 
 //输出消息统计信息到net.log文件
-void	CServer::OutputMsgStatInfo(ulong lIntelTime)
+void	CServer::OutputMsgStatInfo(uint32_t lIntelTime)
 {
     static char pszInfo[1024]="";
-    static ulong dwLastTime = timeGetTime();	
-    ulong dwCurTiem  = timeGetTime();
+    static uint32_t dwLastTime = timeGetTime();	
+    uint32_t dwCurTiem  = timeGetTime();
     if(dwCurTiem-dwLastTime < lIntelTime)
         return;
     dwLastTime = dwCurTiem;
@@ -958,19 +958,19 @@ void	CServer::OutputMsgStatInfo(ulong lIntelTime)
     LeaveCriticalSection(&m_CSMsgStat);
 }
 
-void	CServer::AddNewAcceptSocket(ulong dwSocketID)
+void	CServer::AddNewAcceptSocket(uint32_t dwSocketID)
 {
-    ulong dwTime = timeGetTime();
+    uint32_t dwTime = timeGetTime();
     g_NewAcceptSockets[dwSocketID] = dwTime;
 }
-void	CServer::RemoveNewAcceptSocket(ulong dwSocketID)
+void	CServer::RemoveNewAcceptSocket(uint32_t dwSocketID)
 {
     g_NewAcceptSockets.erase(dwSocketID);
 }
 void	CServer::DoNewAcceptSocket()
 {
-    ulong dwTime = timeGetTime();
-    map<ulong,ulong>::iterator it = g_NewAcceptSockets.begin();
+    uint32_t dwTime = timeGetTime();
+    map<uint32_t,uint32_t>::iterator it = g_NewAcceptSockets.begin();
     for(;it != g_NewAcceptSockets.end();)
     {
         if( dwTime-(*it).second >= m_lSendInterTime )
@@ -1045,7 +1045,7 @@ bool CServer::FreeClient(long lSocketID)
 
 //主动连接服务器,返回该连接的ID
 //返回-1，表示失败
-long CServer::Connect(LPCTSTR lpszHostAddress, UINT nHostPort,long lFlag,ulong dwTimeOut)
+long CServer::Connect(LPCTSTR lpszHostAddress, UINT nHostPort,long lFlag,uint32_t dwTimeOut)
 {
     if(!(m_bMode&1))	return -1;
 
@@ -1087,7 +1087,7 @@ long CServer::Connect(LPCTSTR lpszHostAddress, UINT nHostPort,long lFlag,ulong d
     return lID;
 }
 
-long CServer::Connect(CServerClient* pConClient,LPCTSTR lpszHostAddress, UINT nHostPort,ulong dwTimeOut)
+long CServer::Connect(CServerClient* pConClient,LPCTSTR lpszHostAddress, UINT nHostPort,uint32_t dwTimeOut)
 {
     if(NULL == pConClient || NULL == pConClient->m_hSocket)	return FALSE;
 
@@ -1115,7 +1115,7 @@ long CServer::Connect(CServerClient* pConClient,LPCTSTR lpszHostAddress, UINT nH
     int ret = connect(pConClient->m_hSocket,(SOCKADDR*)&sockAddr, sizeof(sockAddr));
     if( ret == SOCKET_ERROR )
     {
-        ulong dwError = WSAGetLastError();
+        uint32_t dwError = WSAGetLastError();
         if(  dwError != WSAEWOULDBLOCK )
         {
             return FALSE;
@@ -1199,7 +1199,7 @@ bool CServer::OnClientInit(CServerClient* pClient)
 void DoWorkerThreadFunc(CServer* pServer)
 {
     bool bResult;//completion port packet flag
-    ulong dwNumRead;//bytes num be readed
+    DWORD dwNumRead;//bytes num be readed
     ULONG_PTR CPDataKey;
     LPER_IO_OPERATION_DATA lpPerIOData;
 
@@ -1224,7 +1224,7 @@ void DoWorkerThreadFunc(CServer* pServer)
             }
             else if(lpPerIOData)
             {
-                ulong dwError = GetLastError();
+                uint32_t dwError = GetLastError();
                 //添加一个删除Client的操作命令
                 tagSocketOper *pSocketOper = pServer->AllocSockOper();
                 pSocketOper->Init(SCOT_OnError,CPDataKey,(void*)lpPerIOData,dwError);

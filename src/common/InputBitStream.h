@@ -5,7 +5,7 @@
 
 class InputBitStream
 {
-	uchar *m_pData;
+	byte *m_pData;
 
 	int m_byMask;
 	int m_iRack;

@@ -7,7 +7,7 @@
 class CMsgDescribe
 {
 private:
-    std::map<ulong, std::string>								m_mapMsg;
+    std::map<uint32_t, std::string>								m_mapMsg;
 
 	CMsgDescribe									();
 	~CMsgDescribe									();
@@ -19,5 +19,5 @@ public:
 	static CMsgDescribe*	GetInstance				();
 	static void				FinalRelease			();
 
-	const CHAR*				GetDesc					( ulong dwID );
+	const CHAR*				GetDesc					( uint32_t dwID );
 };

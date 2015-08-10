@@ -32,7 +32,7 @@ protected:
 	typedef std::list<tagSocketOper*>	SocketOpers;
     typedef std::list<tagSocketOper*>::iterator itSockOP;
 
-	ulong m_nMaxFreeSockOperNum;
+	uint32_t m_nMaxFreeSockOperNum;
 	SocketOpers	m_FreeSocketOpers;
 	CRITICAL_SECTION	m_CSSockOper;
 
@@ -131,12 +131,12 @@ public:
 protected:
 	bool				m_bCheck;					//是否检测
 
-	ulong				m_dwSendStartTime;			//统计开始时间
+	uint32_t				m_dwSendStartTime;			//统计开始时间
 	long				m_lTotalSendSize;			//发送的总数量
 	long				m_lSendSizePerSecond;		//美秒发送的数量
 	LONG64				m_llSendSize;
 
-	ulong				m_dwRecvStartTime;			//统计开始时间
+	uint32_t				m_dwRecvStartTime;			//统计开始时间
 	long				m_lTotalRecvSize;			//接受总数量
 	long				m_lRecvSizePerSecond;		//每秒接受数量
 	LONG64				m_llRecvSize;

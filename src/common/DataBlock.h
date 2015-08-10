@@ -28,14 +28,14 @@ private:
 	//是否是初始化数据
 	bool m_bInitData;
 	//数据起始地址
-	uchar *m_pBase;
+	byte *m_pBase;
 
 	//当前数据块大小
 	long m_nCurSize;
 	//总数据块大小
 	const long m_nMaxSize;
 public:
-	uchar *Base()	{return m_pBase;}
+	byte *Base()	{return m_pBase;}
 
 	long GetCurSize()	{return m_nCurSize;}
 	void SetCurSize(long lSize);

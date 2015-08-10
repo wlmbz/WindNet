@@ -503,7 +503,7 @@ public:
     static base::type::EnumType castToInt(Level level) {
         return static_cast<base::type::EnumType>(level);
     }
-    /// @brief Casts int(ushort) to level, useful for iterating through enum.
+    /// @brief Casts int(uint16_t) to level, useful for iterating through enum.
     static Level castFromInt(base::type::EnumType l) {
         return static_cast<Level>(l);
     }
@@ -599,7 +599,7 @@ public:
     static base::type::EnumType castToInt(ConfigurationType configurationType) {
         return static_cast<base::type::EnumType>(configurationType);
     }
-    /// @brief Casts int(ushort) to configurationt type, useful for iterating through enum.
+    /// @brief Casts int(uint16_t) to configurationt type, useful for iterating through enum.
     static ConfigurationType castFromInt(base::type::EnumType c) {
         return static_cast<ConfigurationType>(c);
     }

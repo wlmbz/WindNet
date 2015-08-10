@@ -13,7 +13,7 @@ void InputBitStream::LoadFromFile(FILE *fp,int iSize)
 {
 	m_iSize = iSize;
 
-	m_pData = new uchar[m_iSize];
+	m_pData = new byte[m_iSize];
 
 	fread(m_pData,m_iSize,1,fp);
 

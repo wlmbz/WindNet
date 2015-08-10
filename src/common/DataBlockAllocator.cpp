@@ -49,29 +49,29 @@ void CDataBlockAllocator::Initial(int bIniShareDB)
 	{
 		//1M
 		long lSize = 1048576;
-		uchar* pByte = new uchar[lSize];
+		byte* pByte = new byte[lSize];
 		m_ShareDataBlocks.insert(ShareDBPair(lSize,pByte));
-		pByte = new uchar[lSize];
+		pByte = new byte[lSize];
 		m_ShareDataBlocks.insert(ShareDBPair(lSize,pByte));
-		pByte = new uchar[lSize];
+		pByte = new byte[lSize];
 		m_ShareDataBlocks.insert(ShareDBPair(lSize,pByte));
-		pByte = new uchar[lSize];
+		pByte = new byte[lSize];
 		m_ShareDataBlocks.insert(ShareDBPair(lSize,pByte));
 		//2M
 		lSize = 1048576*2;
-		pByte = new uchar[lSize];
+		pByte = new byte[lSize];
 		m_ShareDataBlocks.insert(ShareDBPair(lSize,pByte));
-		pByte = new uchar[lSize];
+		pByte = new byte[lSize];
 		m_ShareDataBlocks.insert(ShareDBPair(lSize,pByte));
-		pByte = new uchar[lSize];
+		pByte = new byte[lSize];
 		m_ShareDataBlocks.insert(ShareDBPair(lSize,pByte));
 		//4M
 		lSize = 1048576*4;
-		pByte = new uchar[lSize];
+		pByte = new byte[lSize];
 		m_ShareDataBlocks.insert(ShareDBPair(lSize,pByte));
 		//8M
 		lSize = 1048576*8;
-		pByte = new uchar[lSize];
+		pByte = new byte[lSize];
 		m_ShareDataBlocks.insert(ShareDBPair(lSize,pByte));
 	}
 
@@ -167,9 +167,9 @@ void CDataBlockAllocator::FreeDB(CDataBlock* pDB)
 }
 
 //申请共享数据块
-uchar* CDataBlockAllocator::AllockShareDB(long lSize)
+byte* CDataBlockAllocator::AllockShareDB(long lSize)
 {
-	uchar *pData = NULL;
+	byte *pData = NULL;
 	itShareDB it = m_ShareDataBlocks.begin();
 	for(;it !=m_ShareDataBlocks.end();it++ )
 	{
@@ -183,13 +183,13 @@ uchar* CDataBlockAllocator::AllockShareDB(long lSize)
 	}
 	if(!pData)
 	{
-		pData = new uchar[lSize];
+		pData = new byte[lSize];
         LOG(WARNING) << "When call DataBlockAllocator::AllockShareDB(%d), not find the datablock" << lSize;		
 	}
 	return pData;
 }
 //释放数据块
-void CDataBlockAllocator::FreeShareDB(uchar* pData)
+void CDataBlockAllocator::FreeShareDB(byte* pData)
 {
 	itAllocR it = m_AllocedShareDB.find(pData);
 	if(it != m_AllocedShareDB.end())
@@ -268,15 +268,15 @@ LeaveCriticalSection(&m_CSFreeDB);
 }
 
 //申请共享数据块
-uchar* CDataBlockAllocator::AllockShareDB(long lSize)
+byte* CDataBlockAllocator::AllockShareDB(long lSize)
 {
 long *pData = (long*)M_ALLOC(lSize);
 if(NULL != pData)
 pData[0] = lSize;
-return (uchar*)&pData[1];
+return (byte*)&pData[1];
 }
 //释放数据块
-void CDataBlockAllocator::FreeShareDB(uchar* pData)
+void CDataBlockAllocator::FreeShareDB(byte* pData)
 {
 if(NULL == pData)
 return;

@@ -7,9 +7,9 @@
 
 class OutputBitStream
 {
-	std::vector<uchar>m_byStreamArray;
+	std::vector<byte>m_byStreamArray;
 
-	uchar m_byMask;
+	byte m_byMask;
     int m_iRack;
     
 	int m_iOutputDotCount;
@@ -25,7 +25,7 @@ public:
 	int  GetLength() const { return (int)m_byStreamArray.size();}//长度是字节长度
 
 	void Flush() { m_iStreamPosition = 0;}
-	uchar GetChar() { return m_byStreamArray[m_iStreamPosition++];}
+	byte GetChar() { return m_byStreamArray[m_iStreamPosition++];}
 
 	void CloseStream(void);
 	void OpenStream(void);
