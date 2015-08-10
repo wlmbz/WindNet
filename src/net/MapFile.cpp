@@ -18,7 +18,7 @@
 #include <tchar.h>
 #include <assert.h>
 #include "BaseMessage.h"
-#include "base/SafeDelete.h"
+#include "common/SafeDelete.h"
 
 
 using namespace std;

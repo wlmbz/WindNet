@@ -15,7 +15,7 @@
 #include "DataBlockSetWriteRead.h"
 #include "DataBlock.h"
 #include "DataBlockAllocator.h"
-#include "base/logging.h"
+#include "common/logging.h"
 
 using namespace std;
 	// Ìí¼ÓÊý¾Ý

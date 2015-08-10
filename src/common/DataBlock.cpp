@@ -11,8 +11,8 @@
 //=============================================================================
 
 #include "DataBlock.h"
-#include "base/logging.h"
-#include "base/SafeDelete.h"
+#include "common/logging.h"
+#include "common/SafeDelete.h"
 
 CDataBlock::CDataBlock(long maxsize)
 :m_nMaxSize(maxsize)

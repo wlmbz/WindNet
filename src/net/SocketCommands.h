@@ -9,7 +9,7 @@
 
 #include <windows.h>
 #include <deque>
-#include "base/DefType.h"
+#include "common/DefType.h"
 
 class CServerClient;
 

@@ -1,7 +1,7 @@
 #include "MsgDescribe.h"
 #include <assert.h>
 #include <fstream>
-#include "base/SafeDelete.h"
+#include "common/SafeDelete.h"
 
 using namespace std;
 

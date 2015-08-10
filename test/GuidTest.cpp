@@ -4,7 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include "base/GUID.h"
+#include "common/GUID.h"
 
 using namespace std;
 

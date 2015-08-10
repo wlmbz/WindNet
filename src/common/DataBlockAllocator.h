@@ -16,7 +16,7 @@
 #include <windows.h>
 #include <map>
 #include <list>
-#include "base/DefType.h"
+#include "common/DefType.h"
 
 class CDataBlock;
 class CGUID;

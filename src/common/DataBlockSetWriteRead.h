@@ -14,8 +14,8 @@
 #pragma once
 
 #include <vector>
-#include "base/DefType.h"
-#include "base/GUID.h"
+#include "common/DefType.h"
+#include "common/GUID.h"
 
 class CDataBlock;
 class CDataBlockAllocator;

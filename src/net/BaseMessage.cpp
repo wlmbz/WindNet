@@ -17,8 +17,8 @@
 
 #include "Basemessage.h"
 #include "MsgCry.h"
-#include "base/logging.h"
-#include "base/SafeDelete.h"
+#include "common/logging.h"
+#include "common/SafeDelete.h"
 
 using namespace std;
 

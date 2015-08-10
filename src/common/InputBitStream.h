@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdio.h>
-#include "base/DefType.h"
+#include "common/DefType.h"
 
 class InputBitStream
 {

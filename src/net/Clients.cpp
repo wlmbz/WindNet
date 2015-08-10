@@ -17,8 +17,8 @@
 #include <process.h>
 #include <assert.h>
 #include "BaseMessage.h"
-#include "base/SafeDelete.h"
-#include "base/Crc32Static.h"
+#include "common/SafeDelete.h"
+#include "common/Crc32Static.h"
 
 
 using namespace std;

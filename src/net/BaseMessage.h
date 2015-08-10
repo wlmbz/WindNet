@@ -16,9 +16,9 @@
 #include <list>
 #include <vector>
 #include "MsgQueue.h"
-#include "base/DataBlock.h"
-#include "base/DataBlockAllocator.h"
-#include "base/DataBlockSetWriteRead.h"
+#include "common/DataBlock.h"
+#include "common/DataBlockAllocator.h"
+#include "common/DataBlockSetWriteRead.h"
 
 class CMySocket;
 class CMessage;

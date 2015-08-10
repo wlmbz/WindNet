@@ -20,7 +20,7 @@
 #include <process.h>
 #include "serverClient.h"
 #include "BaseMessage.h"
-#include "base/SafeDelete.h"
+#include "common/SafeDelete.h"
 
 using namespace std;
 

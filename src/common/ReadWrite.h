@@ -2,7 +2,7 @@
 
 #include <string>
 #include <iostream>
-#include "base/DefType.h"
+#include "common/DefType.h"
 
 
 bool ReadTo(std::istream& stream, const char* name);

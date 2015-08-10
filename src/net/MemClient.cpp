@@ -1,7 +1,7 @@
 #include "MemClient.h"
 #include "BaseMessage.h"
 #include <process.h>
-#include "base/SafeDelete.h"
+#include "common/SafeDelete.h"
 
 bool g_bRun = true;
 

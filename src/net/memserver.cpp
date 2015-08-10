@@ -2,7 +2,7 @@
 #include "MemServer.h"
 #include <process.h>
 #include "BaseMessage.h"
-#include "base/SafeDelete.h"
+#include "common/SafeDelete.h"
 
 struct ArgList
 {
