@@ -1,8 +1,7 @@
 #ifndef _CRC32STATIC_H_
 #define _CRC32STATIC_H_
 
-#include <Windows.h>
-#include "common/DefType.h"
+#include "DefType.h"
 
 class CCrc32Static
 {

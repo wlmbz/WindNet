@@ -13,10 +13,9 @@
 
 #pragma once
 
-#include <windows.h>
 #include <map>
 #include <list>
-#include "common/DefType.h"
+#include "DefType.h"
 
 class CDataBlock;
 class CGUID;

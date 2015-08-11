@@ -407,7 +407,7 @@ void CMapFile::SendExitMsg(void)
 // 写消息(线程统一发送)
 long CMapFile::SendMsg(void)
 {
-	msgQueue TemptMsgQueue;
+	MsgQueue TemptMsgQueue;
 	WaitForSingleObject(m_hSendEvent, INFINITE);
 	if (m_bExit)
 	{
@@ -446,7 +446,7 @@ long CMapFile::SendMsg(void)
 	}
 	if(bDelaySend)
 	{
-		m_SendMsgs.PushMsgsoFront(TemptMsgQueue);
+		m_SendMsgs.Splice(TemptMsgQueue);
 	}
 
 	TemptMsgQueue.clear();

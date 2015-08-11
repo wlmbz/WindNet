@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <map>
 #include <string>
+#include "DefType.h"
 #include "MsgQueue.h"
 
 class CDataBlock;
