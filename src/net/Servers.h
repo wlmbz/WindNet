@@ -23,6 +23,7 @@
 #include "MsgQueue.h"
 #include "SocketCommands.h"
 #include "IOCompletionPort.h"
+#include "ServerWorker.h"
 
 #define CP_TIMEOUT	200
 
@@ -118,7 +119,7 @@ private:
 	FreeAccClients	m_FreeAClients;
 
 
-    std::vector<HANDLE> m_hWorkerThreads;			//工作者线程句柄数组
+    std::vector<ServerWorkerPtr> m_hWorkerThreads;	//工作者线程句柄数组
 	HANDLE m_hNetMainTheads;					//服务器网络主线程
 	HANDLE m_hAcceptThread;						//acceptThread
 
@@ -130,7 +131,6 @@ private:
 public:
 	long GetClientCount()	{ return m_lCurClientCount;}
 
-	HANDLE* GetWorkerThread()	{ return &m_hWorkerThreads[0];}
 	HANDLE GetAcceptThread()	{ return m_hAcceptThread; }
 	// 创建Server的套接字，进入监听状态，等待客户端的连接
 	bool Host(UINT dwPort, const char* strIP,long lFlag,uint32_t nSocketType=SOCK_STREAM);
@@ -170,11 +170,9 @@ public:
 
 	friend unsigned __stdcall NetThreadFunc(void* pArguments);
 	friend void DoNetThreadFunc(CServer* pServer);
-	friend unsigned __stdcall WorkerThreadFunc(void* pArguments);
-	friend void DoWorkerThreadFunc(CServer* pServer);
 	friend unsigned __stdcall AcceptThreadFunc(void* pArguments);
 
-
+    CSocketCommands&    GetSocketOperCommands() { return m_SocketOperaCommands; }
 //
 private:
 	CSocketCommands		m_SocketOperaCommands;		//对网络操作的命令队列

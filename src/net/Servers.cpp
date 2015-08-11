@@ -74,14 +74,8 @@ CServer::CServer()
 
 CServer::~CServer()
 {	
-
     CloseHandle( m_hAcceptThread );
     CloseHandle(m_hNetMainTheads);
-
-    for(int i=0;i<(int)m_hWorkerThreads.size();i++)
-    {
-        CloseHandle(m_hWorkerThreads[i]);
-    }
 }
 
 //启动网络服务器
@@ -250,21 +244,12 @@ bool CServer::CreateNetMainThread()
     return TRUE;
 }
 //创建在完成端口上等待的工作者线程
-bool CServer::CreateWorkerThreads(int nProcNum)
+bool CServer::CreateWorkerThreads(int concurrenty)
 {
-    //	uint32_t dwThreadId;
-    if(nProcNum>=2)
-        nProcNum = nProcNum/2;
-
-    for( int i=0;i<nProcNum;i++ )
+    for (int i = 0; i<concurrenty; i++)
     {
-        unsigned threadID;
-        HANDLE hWorkerThread = (HANDLE)_beginthreadex(NULL,0,WorkerThreadFunc,this,0,&threadID);
-
-        m_hWorkerThreads.push_back(hWorkerThread);
-
-        if(hWorkerThread==NULL)
-            return FALSE;
+        ServerWorkerPtr worker(new CServerWorker(this));
+        m_hWorkerThreads.push_back(worker);
     }
 
     //PutTraceString(NET_MODULE,"服务器创建%d个完成端口工作线程。",nProcNum);
@@ -341,15 +326,12 @@ void CServer::ExitWorkerThread(void)
 
 
     //完成端口的工作线程退出
-    int nSize = (int)m_hWorkerThreads.size();
-    for(int i=0;i < nSize; i++)
+    for (int i = 0; i < m_hWorkerThreads.size(); i++)
     {
         //给工作者线程发送退出消息
         completion_port_.PostStatus(0);
-    }
-
-    WaitForMultipleObjects((uint32_t)m_hWorkerThreads.size(),&m_hWorkerThreads[0],TRUE,INFINITE);	
-
+        m_hWorkerThreads[i]->Wait();
+    }	
 
     //发送退出主线程操作命令
     tagSocketOper* pSocketOpera = AllocSockOper();
@@ -1183,111 +1165,6 @@ bool CServer::OnClientInit(CServerClient* pClient)
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
-
-void DoWorkerThreadFunc(CServer* pServer)
-{
-    bool bResult;//completion port packet flag
-    DWORD dwNumRead;//bytes num be readed
-    ULONG_PTR CPDataKey;
-    LPER_IO_OPERATION_DATA lpPerIOData;
-
-    char strTempt[100]="";
-    while(true)
-    {
-        //pServer->IncWorkThreadTick();
-        //等待完成端口通告
-        dwNumRead = -1;
-        bResult = pServer->GetIOCompletionPort().GetStatus(
-            &CPDataKey,
-            &dwNumRead,
-            (LPOVERLAPPED*)&lpPerIOData,
-            INFINITE)
-            ? true : false;
-
-        if(!bResult)
-        {
-            if(lpPerIOData == NULL && dwNumRead == -1)
-            {
-                //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__, "完成端口线程产生错误,未取到完成包(bResult == false,lpPerIOData == NULL,ErrorID:%d)。",GetLastError());
-            }
-            else if(lpPerIOData)
-            {
-                uint32_t dwError = GetLastError();
-                //添加一个删除Client的操作命令
-                tagSocketOper *pSocketOper = pServer->AllocSockOper();
-                pSocketOper->Init(SCOT_OnError,CPDataKey,(void*)lpPerIOData,dwError);
-                pServer->m_SocketOperaCommands.PushBack(pSocketOper);
-            }
-            else
-            {
-               //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"完成端口线程产生未知错误！");
-            }
-        }
-        else  ////data is valid,dispose!
-        {	
-            //退出
-            if(CPDataKey==0)
-            {
-                break;
-            }
-            else if(lpPerIOData == NULL)
-            {
-                //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"完成端口线程产生错误(bResult == true,lpPerIOData == NULL)！");
-            }
-            else
-            {
-                tagSocketOper *pSocketOper = pServer->AllocSockOper();
-                if(lpPerIOData->OperationType == SOT_SendZeroByte)
-                {
-                    //如果是发送0字节大小的操作
-                    //添加一个删除Client的操作命令					
-                    pSocketOper->Init(SCOT_OnSendZeroByte,CPDataKey,(void*)lpPerIOData,0);
-                }
-                else if(dwNumRead==0)
-                {
-                    //添加一个删除Client的操作命令
-                    pSocketOper->Init(SCOT_OnClose,CPDataKey,(void*)lpPerIOData,0);
-                }
-                else if(lpPerIOData->OperationType == SOT_Receive)
-                {
-                    pSocketOper->Init(SCOT_OnRecieve,CPDataKey,(void*)lpPerIOData,dwNumRead);
-                }
-                else if(lpPerIOData->OperationType == SOT_Send)
-                {		
-                    //添加一个完成发送的消息
-                    pSocketOper->Init(SCOT_OnSend,CPDataKey,(void*)lpPerIOData,dwNumRead);
-                }
-                pServer->m_SocketOperaCommands.PushBack(pSocketOper);
-            }
-        }
-    }
-}
-
-//*****************************************
-//[服务器]工作者线程的逻辑函数
-//*****************************************
-unsigned __stdcall WorkerThreadFunc(void* pArguments)
-{
-    CServer* pServer=(CServer*)pArguments;
-
-#ifndef _DEBUG
-    __try
-    {
-#endif
-
-        DoWorkerThreadFunc(pServer);
-
-#ifndef _DEBUG
-    }
-    __except(_Sword3::CrashFilter(GetExceptionInformation(),GetExceptionCode()))
-    {
-        PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"********完成端口工作线程出错，请查看最新的错误报告文件********");
-    }
-#endif
-
-    _endthreadex( 0 );
-    return 0;
-}
 
 unsigned __stdcall AcceptThreadFunc(void* pArguments)
 {	
