@@ -52,7 +52,27 @@ solution 'WindNet'
             'winmm',
             'libNet'
         }
-
+    
+    project 'Example'
+        location 'build'
+        kind 'ConsoleApp'
+        uuid 'E693BE88-7B61-4A7F-AA01-A3FF2FDDF96F'
+        files
+        {
+            'example/**.h',
+            'example/**.cpp',
+        }
+        includedirs
+        {
+            'src'
+        }
+        links
+        {
+            'ws2_32',
+            'winmm',
+            'libNet'
+        }
+    
     project 'libNet'
         location 'build'
         kind 'StaticLib'
