@@ -35,7 +35,7 @@ void tagDataBlockWriteSet::AddToByteArray(const char* pStr)
 void tagDataBlockWriteSet::AddToByteArray(const CGUID& guid)
 {
 	long size = sizeof(CGUID);
-	if(guid.is_nil())
+	if(guid.isNil())
 	{
 		size = 0;
 	}
