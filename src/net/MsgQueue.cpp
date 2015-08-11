@@ -1,6 +1,6 @@
 
 #include "MsgQueue.h"
-#include "basemessage.h"
+#include "BaseMessage.h"
 
 
 
@@ -10,81 +10,73 @@
 
 CMsgQueue::CMsgQueue()
 {
-	InitializeCriticalSection(&m_CriticalSectionMsgQueue);
 }
 
 CMsgQueue::~CMsgQueue()
 {
 	Clear();
-	DeleteCriticalSection(&m_CriticalSectionMsgQueue);
 }
 
 //压入一个消息
 bool CMsgQueue::PushMessage(CBaseMessage* pMsg)
 {
-	EnterCriticalSection(&m_CriticalSectionMsgQueue);
 	if( pMsg )
 	{
-		m_msgQueue.push_back(pMsg);
-		LeaveCriticalSection(&m_CriticalSectionMsgQueue);
+        std::lock_guard<std::mutex> guard(mutex_);
+        queue_.push_back(pMsg);
 		return true;
 	}
-
-	LeaveCriticalSection(&m_CriticalSectionMsgQueue);
 	return false;
 }
 
-bool CMsgQueue::PushMsgsoFront(msgQueue& queMsgs)
+bool CMsgQueue::Splice(MsgQueue& other)
 {
-	if( queMsgs.size() == 0)	return false;
-	EnterCriticalSection(&m_CriticalSectionMsgQueue);
-	m_msgQueue.insert(m_msgQueue.begin(),queMsgs.begin(),queMsgs.end());
-	LeaveCriticalSection(&m_CriticalSectionMsgQueue);
-	return true;
+    if (other.empty())
+    {
+        std::lock_guard<std::mutex> guard(mutex_);
+        queue_.insert(queue_.begin(), other.begin(), other.end());
+        return true;
+    }
+    return false;
 }
 
 //弹出一个消息
 CBaseMessage* CMsgQueue::PopMessage()
 {
-	EnterCriticalSection(&m_CriticalSectionMsgQueue);
-	if (m_msgQueue.empty())
-	{
-		LeaveCriticalSection(&m_CriticalSectionMsgQueue);
-		return NULL;
-	}
-
-	CBaseMessage* pMsg = *m_msgQueue.begin();
-	m_msgQueue.pop_front();
-	LeaveCriticalSection(&m_CriticalSectionMsgQueue);
-	return pMsg;
+    std::lock_guard<std::mutex> guard(mutex_);
+    CBaseMessage* pMsg = NULL;
+    if (!queue_.empty())
+    {
+        pMsg = queue_.front();
+        queue_.pop_front();
+    }
+    return pMsg;
 }
 
-void CMsgQueue::GetAllMessage(msgQueue& pTemptMsgQueue)
+void CMsgQueue::GetAllMessage(MsgQueue& tmp)
 {
-	EnterCriticalSection(&m_CriticalSectionMsgQueue);
-	pTemptMsgQueue = m_msgQueue;
-	m_msgQueue.clear();
-	LeaveCriticalSection(&m_CriticalSectionMsgQueue);
+    std::lock_guard<std::mutex> guard(mutex_);
+    queue_.swap(tmp);
 }
 
 // 得到消息队列长度
-long CMsgQueue::GetSize()
+size_t CMsgQueue::GetSize()
 {
-	EnterCriticalSection(&m_CriticalSectionMsgQueue);
-	long lSize = (long)m_msgQueue.size();
-	LeaveCriticalSection(&m_CriticalSectionMsgQueue);
-	return lSize;
+    std::lock_guard<std::mutex> guard(mutex_);
+    return queue_.size();
 }
 
 
 //清空消息
 void CMsgQueue::Clear()
 {
-	EnterCriticalSection(&m_CriticalSectionMsgQueue);
-	for (msgQueue::iterator it = m_msgQueue.begin(); it!=m_msgQueue.end(); it++)
-	{
-		delete (*it);
-	}
-	m_msgQueue.clear();
-	LeaveCriticalSection(&m_CriticalSectionMsgQueue);
+    MsgQueue tmp;
+    {
+        std::lock_guard<std::mutex> guard(mutex_);
+        tmp.swap(queue_);
+    }
+    for (auto pMsg : tmp)
+    {
+        delete pMsg;
+    }
 }

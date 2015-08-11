@@ -1,10 +1,11 @@
 #pragma once
 
-#include <Windows.h>
+
 #include <deque>
+#include <mutex>
 
 class CBaseMessage;
-typedef std::deque<CBaseMessage*> msgQueue;
+typedef std::deque<CBaseMessage*> MsgQueue;
 
 /* -------------------------------------------
   [CMsgQueue] 消息队列
@@ -15,21 +16,20 @@ typedef std::deque<CBaseMessage*> msgQueue;
 ---------------------------------------------*/
 class CMsgQueue  
 {
-private:
-	msgQueue m_msgQueue;	// 队列
-	CRITICAL_SECTION m_CriticalSectionMsgQueue;
-
 public:
 	CMsgQueue();
-	virtual ~CMsgQueue();
+	~CMsgQueue();
 
-	bool PushMessage(CBaseMessage* pMsg);	// 压入消息
-	//压入多个消息到队列前
-	bool PushMsgsoFront(msgQueue& queMsgs);
-	CBaseMessage* PopMessage();				// 弹出消息
-	void	GetAllMessage(msgQueue& pTemptMsgQueue);
+	bool            PushMessage(CBaseMessage* pMsg);	// 压入消息
+	CBaseMessage*   PopMessage();				        // 弹出消息
+    bool            Splice(MsgQueue& other);
+	void	        GetAllMessage(MsgQueue& tmp);
 
-	long GetSize();							// 得到消息队列长度
-	void Clear();							// 清空消息
+	size_t          GetSize();		// 得到消息队列长度
+	void            Clear();		// 清空消息
+
+private:
+    MsgQueue    queue_;	// 队列
+    std::mutex  mutex_;
 };
 
