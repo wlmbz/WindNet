@@ -93,9 +93,6 @@ class CMessage;
 class CMySocket
 {
 public:
-	static bool MySocketInit();		// 程序启动时调用，初始化Winsock
-	static void MySocketClearUp();	// 程序退出时调用
-
 	CMySocket();
 	virtual ~CMySocket();
 

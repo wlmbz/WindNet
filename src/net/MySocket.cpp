@@ -21,37 +21,6 @@
 /// 默认所有通信无需加密
 long CMySocket::s_lEncryptType = 0;
 
-//------------------------------------------------------------------
-// 初始化Winsock 2.0
-//------------------------------------------------------------------
-bool CMySocket::MySocketInit()
-{
-	WSADATA wsaData;
-	WORD wVersionRequested = MAKEWORD(2, 0);
-	int nResult = WSAStartup(wVersionRequested, &wsaData);
-	if (nResult != 0)
-	{
-		//PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"WSAStartup Failed!");
-		return FALSE;
-	}
-
-	if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 0)
-	{
-		//PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"Is not Winsock 2.0!");
-		WSACleanup();
-		return FALSE;
-	}
-
-	return TRUE;
-}
-
-//------------------------------------------------------------------
-// 程序退出时调用
-//------------------------------------------------------------------
-void CMySocket::MySocketClearUp()
-{
-	WSACleanup();
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // CMySocket Construction
