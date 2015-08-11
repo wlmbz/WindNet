@@ -39,6 +39,7 @@ public:
     
     // interface
     bool            create();
+    void            invalidate();
     bool            fromString(StringPiece sp);
     std::string     toString() const;
     bool            isNil() const;

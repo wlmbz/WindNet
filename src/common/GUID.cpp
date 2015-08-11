@@ -1,4 +1,8 @@
-﻿#include "guid.h"
+﻿// Copyright (C) 2014-2015 ichenq@outlook.com. All rights reserved.
+// Distributed under the terms and conditions of the Apache License.
+// See accompanying files LICENSE.
+
+#include "GUID.h"
 #include <objbase.h>
 #include "Strings.h"
 #include "Logging.h"
@@ -77,7 +81,7 @@ inline bool fromHex(void* ptr, size_t size, StringPiece sp)
 
 CGUID::CGUID()
 {
-    memset(this, 0, sizeof(*this));
+    invalidate();
 }
 
 CGUID::CGUID(StringPiece sp)
@@ -89,6 +93,11 @@ bool CGUID::create()
 {
     HRESULT hr = CoCreateGuid(this);
     return (hr != S_OK);
+}
+
+void CGUID::invalidate()
+{
+    memset(this, 0, sizeof(*this));
 }
 
 bool CGUID::fromString(StringPiece sp)
