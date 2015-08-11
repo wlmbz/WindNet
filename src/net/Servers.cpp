@@ -82,9 +82,6 @@ CServer::~CServer()
     {
         CloseHandle(m_hWorkerThreads[i]);
     }
-
-
-    CloseHandle(m_hCompletionPort);
 }
 
 //启动网络服务器
@@ -143,10 +140,7 @@ bool	CServer::Start(BYTE bMode,CDataBlockAllocator* pDBAllocator,
     GetSystemInfo(&sysInfo);
 
     //根据cpu数量创建完成端口
-    m_hCompletionPort=CreateIoCompletionPort(INVALID_HANDLE_VALUE,NULL,0,sysInfo.dwNumberOfProcessors);
-
-    //创建完成端口失败
-    if(m_hCompletionPort==NULL)
+    if (!completion_port_.Init(sysInfo.dwNumberOfProcessors))
     {
         //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"创建完成端口失败!");
         return false;
@@ -351,7 +345,7 @@ void CServer::ExitWorkerThread(void)
     for(int i=0;i < nSize; i++)
     {
         //给工作者线程发送退出消息
-        PostQueuedCompletionStatus(m_hCompletionPort,0,0,0);
+        completion_port_.PostStatus(0);
     }
 
     WaitForMultipleObjects((uint32_t)m_hWorkerThreads.size(),&m_hWorkerThreads[0],TRUE,INFINITE);	
@@ -705,21 +699,15 @@ int CServer::ASend(long lIndexID,CBaseMessage *pMsg)
 // 用于邦定一个SOCKET到完成端口
 bool CServer::AssociateSocketWithCP(SOCKET socket,uint32_t dwCompletionKey)
 {
-    if(m_hCompletionPort == NULL)
+    if(completion_port_.GetHandle() == NULL)
     {
         //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数 CServer::AssociateSocketWithCP(...)里操作出错，完成端口句柄无效。");
         return false;
     }
-    HANDLE hHanle = CreateIoCompletionPort((HANDLE)socket, m_hCompletionPort, dwCompletionKey, 0);
-    if(hHanle == NULL)
+    if (!completion_port_.AssociateDevice((HANDLE)socket, dwCompletionKey))
     {
         uint32_t dwErrorID = GetLastError();
         //PutErrorString(NET_MODULE,"%-15s在函数 CServer::AssociateSocketWithCP(...)里.邦定一个Socket到完成端口出错(ErrorID:%d)",__FUNCTION__,dwErrorID);
-        return false;
-    }
-    if(hHanle!= m_hCompletionPort)
-    {
-        //PutErrorString(NET_MODULE,"%-15s %s",__FUNCTION__,"在函数 CServer::AssociateSocketWithCP(...)里操作出错，邦定SOCKET到完成端口的返回值出错。");
         return false;
     }
     return true;
@@ -1209,9 +1197,9 @@ void DoWorkerThreadFunc(CServer* pServer)
         //pServer->IncWorkThreadTick();
         //等待完成端口通告
         dwNumRead = -1;
-        bResult=GetQueuedCompletionStatus(pServer->m_hCompletionPort,
-            &dwNumRead,
+        bResult = pServer->GetIOCompletionPort().GetStatus(
             &CPDataKey,
+            &dwNumRead,
             (LPOVERLAPPED*)&lpPerIOData,
             INFINITE)
             ? true : false;

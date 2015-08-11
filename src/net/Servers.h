@@ -21,7 +21,8 @@
 #include <vector>
 #include "MySocket.h"
 #include "MsgQueue.h"
-#include "socketcommands.h"
+#include "SocketCommands.h"
+#include "IOCompletionPort.h"
 
 #define CP_TIMEOUT	200
 
@@ -34,34 +35,7 @@ const int MAX_CLIENTS = 2048;
 class CServer : public CMySocket
 {
 private:
-	byte	m_bMode;	//启动模式
-
-	typedef std::list<tagSocketOper*>	SocketOpers;
-    typedef std::list<tagSocketOper*>::iterator itSockOP;
-
-	uint32_t m_nMaxFreeSockOperNum;
-	SocketOpers	m_FreeSocketOpers;
-	CRITICAL_SECTION	m_CSSockOper;
-
-    typedef std::list<PER_IO_OPERATION_DATA*>	ListIOOpers;
-    typedef std::list<PER_IO_OPERATION_DATA*>::iterator itIOOper;
-
-	uint32_t m_nMaxFreeIOOperNum;
-	ListIOOpers	m_FreeListIOOpers;
-	CRITICAL_SECTION	m_CSIOOper;
-
-	//最大的空闲连接客户端数量
-	long	m_lMaxFreeConClientNum;
-
-	CRITICAL_SECTION	m_CSClient;
-	CServerClient	**m_pClients;
-	long	m_lTotalClientsNum;
-
-
-	CDataBlockAllocator*	m_pDBAllocator;
-
-	//每次IO操作的DataBufNum数量
-	long	m_lIOOperDataBufNum;
+	
 public:
 	//启动网络服务器
 	bool	Start(	byte bMode,CDataBlockAllocator* pDBAllocator,
@@ -97,7 +71,37 @@ public:
 	// 删除一个客户端
 	bool FreeClient(long lSocketID);
 
-protected:
+    CIOCompletionPort&  GetIOCompletionPort() { return completion_port_; }
+private:
+    byte	m_bMode;	//启动模式
+
+    typedef std::list<tagSocketOper*>	SocketOpers;
+    typedef std::list<tagSocketOper*>::iterator itSockOP;
+
+    uint32_t m_nMaxFreeSockOperNum;
+    SocketOpers	m_FreeSocketOpers;
+    CRITICAL_SECTION	m_CSSockOper;
+
+    typedef std::list<PER_IO_OPERATION_DATA*>	ListIOOpers;
+    typedef std::list<PER_IO_OPERATION_DATA*>::iterator itIOOper;
+
+    uint32_t m_nMaxFreeIOOperNum;
+    ListIOOpers	m_FreeListIOOpers;
+    CRITICAL_SECTION	m_CSIOOper;
+
+    //最大的空闲连接客户端数量
+    long	m_lMaxFreeConClientNum;
+
+    CRITICAL_SECTION	m_CSClient;
+    CServerClient	**m_pClients;
+    long	m_lTotalClientsNum;
+
+
+    CDataBlockAllocator*	m_pDBAllocator;
+
+    //每次IO操作的DataBufNum数量
+    long	m_lIOOperDataBufNum;
+
 	// 连上了服务器的套接字数量
 	long m_lCurClientCount;
 
@@ -120,8 +124,8 @@ protected:
 
 	bool m_bAcceptThreadExit;					//是否结束AcceptThread
 	bool m_bWorkerThreadsExit;					//是否结束工作者线程
-public:
-	 HANDLE m_hCompletionPort;   //completion port
+
+    CIOCompletionPort completion_port_;
 
 public:
 	long GetClientCount()	{ return m_lCurClientCount;}

@@ -249,7 +249,7 @@ void CServerClient::SendZeroByteData()
     if(NULL == pPerIOData) return;
     memset( &pPerIOData->OverLapped,0,sizeof(OVERLAPPED) );
     pPerIOData->OperationType = SOT_SendZeroByte;
-    bool bSuccess = PostQueuedCompletionStatus(m_pServers->m_hCompletionPort,0,(uint32_t)GetIndexID(),(OVERLAPPED*)pPerIOData) ? true : false;
+    bool bSuccess = m_pServers->GetIOCompletionPort().PostStatus(GetIndexID(), 0, (OVERLAPPED*)pPerIOData);
     if( !bSuccess && WSAGetLastError() != ERROR_IO_PENDING )
     {
         //PutErrorString(NET_MODULE,"%-15sCServerClient::SendZeroByteData().PostQueuedCompletionStatus .erros(errid:%d).",__FUNCTION__,WSAGetLastError());
