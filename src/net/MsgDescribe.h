@@ -2,7 +2,7 @@
 
 #include <map>
 #include "BaseMessage.h"
-#include "common/DefType.h"
+#include "DefType.h"
 
 class CMsgDescribe
 {

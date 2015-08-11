@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "common/DefType.h"
+#include "DefType.h"
 
 #define OUTPUT_DOT_COUNT 2047//2k√ø¥Œ
 

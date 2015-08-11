@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "common/DefType.h"
+#include "DefType.h"
 
 class CDataBlock
 {

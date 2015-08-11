@@ -16,7 +16,7 @@
 
 
 #include <Winsock2.h>
-#include "common/DefType.h"
+#include "DefType.h"
 
 
 const int MAX_MESSAGE_LENGTH = 1048576*2;

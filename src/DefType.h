@@ -14,7 +14,7 @@
 #include <stdint.h>
 #include <Windows.h>
 
-
+typedef uint8_t       byte;
 typedef uint8_t       byte;
 
 

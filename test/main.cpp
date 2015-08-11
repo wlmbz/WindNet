@@ -1,6 +1,6 @@
 #include <objbase.h>
 #include <gtest/gtest.h>
-
+#include "net/WinsockInit.h"
 
 
 class MyTestEnvironment : public testing::Environment
@@ -16,7 +16,6 @@ public:
         ::CoUninitialize();
     }
 };
-
 
 int main(int argc, char* argv[])
 {
