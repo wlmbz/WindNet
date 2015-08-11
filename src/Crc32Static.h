@@ -2,7 +2,7 @@
 #define _CRC32STATIC_H_
 
 #include <Windows.h>
-#include "DefType.h"
+#include "common/DefType.h"
 
 class CCrc32Static
 {

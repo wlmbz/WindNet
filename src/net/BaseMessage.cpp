@@ -326,7 +326,7 @@ void CBaseMessage::Add(const char* pStr)
 void CBaseMessage::Add(const CGUID&	guid)
 {
     long size = sizeof(CGUID);
-    if(guid == CGUID::GUID_INVALID)
+    if (guid.isNil())
     {
         size = 0;
     }
@@ -440,7 +440,7 @@ bool  CBaseMessage::GetGUID(CGUID& guid)
     long size = GetByte();
     if(size == 0)
     {
-        guid = CGUID::GUID_INVALID;
+        guid.invalidate();
         return false;
     }
 

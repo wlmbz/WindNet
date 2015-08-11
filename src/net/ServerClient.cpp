@@ -19,7 +19,7 @@
 #include <assert.h>
 #include "BaseMessage.h"
 #include "Servers.h"
-#include "common/Crc32Static.h"
+
 
 
 using namespace std;

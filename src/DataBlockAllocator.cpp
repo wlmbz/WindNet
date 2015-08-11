@@ -101,7 +101,7 @@ void CDataBlockAllocator::Release()
 	map<long,long>::iterator itTest = m_MapTest.begin();
 	for(;itTest != m_MapTest.end();itTest++)
 	{
-        LOG_IF((*itTest).second != 0, TRACE)
+        LOG_IF(INFO, (*itTest).second != 0)
             << "Flag: " << (*itTest).first << ", Count: " << (*itTest).second;
 	}
 }
@@ -113,7 +113,7 @@ void CDataBlockAllocator::PutAllocInfo(const char* pszFileName)
 	map<long,long>::iterator itTest = m_MapTest.begin();
 	for(;itTest != m_MapTest.end();itTest++)
 	{
-        LOG_IF((*itTest).second != 0, TRACE)
+        LOG_IF(INFO, (*itTest).second != 0)
             << "Flag: " << (*itTest).first << ", Count: " << (*itTest).second;
 	}
 	LeaveCriticalSection(&m_CSFreeDB);

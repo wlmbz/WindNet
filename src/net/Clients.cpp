@@ -18,7 +18,7 @@
 #include <assert.h>
 #include "BaseMessage.h"
 #include "common/SafeDelete.h"
-#include "common/Crc32Static.h"
+#include "Crc32Static.h"
 
 
 using namespace std;
@@ -213,7 +213,7 @@ bool CClient::ExitSocketThread()
 	//发送退出主线程操作命令
 	tagSocketOper* pSocketOpera = AllocSockOper();
 	pSocketOpera->Init(SCOT_Client_ExitThread,0,0);
-	m_SocketOperaCommands.Push_Back(pSocketOpera);
+	m_SocketOperaCommands.PushBack(pSocketOpera);
 
 	WaitForSingleObject(m_hNetClientThread,INFINITE);
 	CloseHandle(m_hNetClientThread);
@@ -270,7 +270,7 @@ int CClient::ASend(CBaseMessage *pMsg,int nFlags)
 	//加入发送命令到操作队列
 	tagSocketOper* pSocketOpera = AllocSockOper();
 	pSocketOpera->Init(SCOT_Client_Send,GetIndexID(),pMsg,nFlags);
-	m_SocketOperaCommands.Push_Back(pSocketOpera);
+	m_SocketOperaCommands.PushBack(pSocketOpera);
 	return true;
 }
 
@@ -399,7 +399,7 @@ void CClient::OnReceive(int nErrorCode)
 		pDB->SetCurSize(nRetsize);
 		tagSocketOper* pSocketOpera = AllocSockOper();
 		pSocketOpera->Init(SCOT_Client_OnRecv,GetIndexID(),pDB,nRetsize);
-		m_SocketOperaCommands.Push_Back(pSocketOpera);		
+		m_SocketOperaCommands.PushBack(pSocketOpera);		
 	}
 }
 
@@ -742,7 +742,7 @@ void DoSocketThread(CClient* pClient)
 				tagSocketOper* pSocketOpera = pClient->AllocSockOper();
 				pSocketOpera->Init(SCOT_Client_OnSend,pClient->GetIndexID()
 					,NULL,events.iErrorCode[FD_WRITE_BIT]);
-				pClient->m_SocketOperaCommands.Push_Back(pSocketOpera);
+				pClient->m_SocketOperaCommands.PushBack(pSocketOpera);
 			}
 			// [CLIENT] 连接成功
 			if (events.lNetworkEvents & FD_CONNECT)

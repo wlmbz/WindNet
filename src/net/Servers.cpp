@@ -122,7 +122,7 @@ bool	CServer::Start(BYTE bMode,CDataBlockAllocator* pDBAllocator,
     uint32_t i = 0;
     for(;i<m_nMaxFreeSockOperNum;i++)
     {
-        tagSocketOper* pSockOper = new tagSocketOper();
+        tagSocketOper* pSockOper = new tagSocketOper;
         m_FreeSocketOpers.push_back(pSockOper);
     }
     //预分配IO操作结构
@@ -360,7 +360,7 @@ void CServer::ExitWorkerThread(void)
     //发送退出主线程操作命令
     tagSocketOper* pSocketOpera = AllocSockOper();
     pSocketOpera->Init(SCOT_ExitThread,0,0);
-    m_SocketOperaCommands.Push_Back(pSocketOpera);
+    m_SocketOperaCommands.PushBack(pSocketOpera);
     //等候网络主线程完成
     WaitForSingleObject(m_hNetMainTheads,INFINITE);
 }
@@ -521,7 +521,7 @@ void CServer::OnAccept(int nErrorCode)
 
     tagSocketOper *pSocketOper = AllocSockOper();
     pSocketOper->Init(SCOT_Init,pServerClient->GetIndexID(),pServerClient);
-    m_SocketOperaCommands.Push_Back(pSocketOper);
+    m_SocketOperaCommands.PushBack(pSocketOper);
 
     pServerClient->OnAccept();
 
@@ -698,7 +698,7 @@ int CServer::ASend(long lIndexID,CBaseMessage *pMsg)
     pMsg->SetStartSendTime(timeGetTime());
     tagSocketOper *pSocketOper = AllocSockOper();
     pSocketOper->Init(SCOT_Send,lIndexID,(void*)pMsg);
-    m_SocketOperaCommands.Push_Back(pSocketOper);
+    m_SocketOperaCommands.PushBack(pSocketOper);
     return true;
 }
 
@@ -1082,7 +1082,7 @@ long CServer::Connect(LPCTSTR lpszHostAddress, UINT nHostPort,long lFlag,uint32_
 
     tagSocketOper* pSocketOpera = AllocSockOper();
     pSocketOpera->Init(SCOT_Init,lID,pConClient,0);
-    m_SocketOperaCommands.Push_Back(pSocketOpera);
+    m_SocketOperaCommands.PushBack(pSocketOpera);
 
     return lID;
 }
@@ -1141,7 +1141,7 @@ bool  CServer::DisConn(long lIndexID)
 {
     tagSocketOper* pSocketOper = AllocSockOper();
     pSocketOper->Init(SCOT_DisConn,lIndexID,NULL);
-    m_SocketOperaCommands.Push_Back(pSocketOper);
+    m_SocketOperaCommands.PushBack(pSocketOper);
     return true;
 }
 
@@ -1149,7 +1149,7 @@ bool  CServer::DisConnAll()
 {
     tagSocketOper* pSocketOper = AllocSockOper();
     pSocketOper->Init(SCOT_DisConnAll,0,NULL);
-    m_SocketOperaCommands.Push_Back(pSocketOper);
+    m_SocketOperaCommands.PushBack(pSocketOper);
     return true;
 }
 
@@ -1157,7 +1157,7 @@ bool  CServer::CloseAll()
 {
     tagSocketOper* pSocketOper = AllocSockOper();
     pSocketOper->Init(SCOT_CloseAll,0,NULL);
-    m_SocketOperaCommands.Push_Back(pSocketOper);
+    m_SocketOperaCommands.PushBack(pSocketOper);
     return true;
 }
 
@@ -1228,7 +1228,7 @@ void DoWorkerThreadFunc(CServer* pServer)
                 //添加一个删除Client的操作命令
                 tagSocketOper *pSocketOper = pServer->AllocSockOper();
                 pSocketOper->Init(SCOT_OnError,CPDataKey,(void*)lpPerIOData,dwError);
-                pServer->m_SocketOperaCommands.Push_Back(pSocketOper);
+                pServer->m_SocketOperaCommands.PushBack(pSocketOper);
             }
             else
             {
@@ -1269,7 +1269,7 @@ void DoWorkerThreadFunc(CServer* pServer)
                     //添加一个完成发送的消息
                     pSocketOper->Init(SCOT_OnSend,CPDataKey,(void*)lpPerIOData,dwNumRead);
                 }
-                pServer->m_SocketOperaCommands.Push_Back(pSocketOper);
+                pServer->m_SocketOperaCommands.PushBack(pSocketOper);
             }
         }
     }

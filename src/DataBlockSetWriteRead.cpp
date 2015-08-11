@@ -103,7 +103,7 @@ bool  tagDataBlockReadSet::GetBufferFromByteArray(CGUID& guid)
 	GetBuff((byte*)&size,1);
 	if(size == 0)
 	{
-		guid = CGUID::GUID_INVALID;
+		guid.invalidate();
 		return false;
 	}
 	else
