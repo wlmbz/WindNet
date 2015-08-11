@@ -1,25 +1,20 @@
-﻿/**
- *  @file:   GUID.h
- *  @author: ichenq@gmail.com
- *  @date:   Oct 11, 2011
- *  @brief:  globally unique identifiers
- *
- */
+﻿// Copyright (C) 2014-2015 ichenq@outlook.com. All rights reserved.
+// Distributed under the terms and conditions of the Apache License.
+// See accompanying files LICENSE.
 
 #pragma once
 
-#include "DefType.h"
 #include <guiddef.h>
 #include <string>
 #include <algorithm>
 #include <functional>
+#include "DefType.h"
+#include "Range.h"
 
 
 class CGUID : public GUID
 {
 public:    
-    enum {MIN_LEN = 38}; // '{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}' format
-
     typedef byte            value_type;
     typedef byte&           reference;
     typedef byte const&     const_reference;
@@ -30,14 +25,7 @@ public:
 
 public:    
     CGUID();
-    explicit CGUID(const char* str);
-    explicit CGUID(const wchar_t* str);
-    CGUID(const CGUID& other);
-    ~CGUID();
-
-    CGUID& operator = (const CGUID& other);
-
-    static CGUID GUID_INVALID;
+    explicit CGUID(StringPiece sp);
 
     size_type       size() const    {return sizeof(*this); }
     byte*           data()          { return reinterpret_cast<byte*>(this); }
@@ -51,10 +39,9 @@ public:
     
     // interface
     bool            create();
-    bool            from_string(const wchar_t* str);
-    bool            from_string(const char* str);
-    std::string     to_string() const;
-    bool            is_nil() const;
+    bool            fromString(StringPiece sp);
+    std::string     toString() const;
+    bool            isNil() const;
 };
 
 
@@ -88,25 +75,25 @@ inline bool operator >= (const CGUID& lhs, const CGUID& rhs)
 inline size_t hash_value(const CGUID& guid)
 {
     std::size_t seed = 0;
-    for(CGUID::const_iterator iter = guid.begin(); iter != guid.end(); ++iter)
+    for(auto ch : guid)
     {
-        seed ^= static_cast<std::size_t>(*iter) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= static_cast<std::size_t>(ch) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
     return seed;
 }
 
 namespace std {
-    template <>
-    struct hash <CGUID>
+template <>
+struct hash <CGUID>
+{
+    size_t operator()(const CGUID& key)
     {
-        size_t operator()(const CGUID& key)
-        {
-            return hash_value(key);
-        }
-    };
+        return hash_value(key);
+    }
+};
 }
 
-inline CGUID create_guid()
+inline CGUID createGuid()
 {
     CGUID guid;
     guid.create();
