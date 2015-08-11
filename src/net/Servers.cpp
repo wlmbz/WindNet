@@ -249,6 +249,7 @@ bool CServer::CreateWorkerThreads(int concurrenty)
     for (int i = 0; i<concurrenty; i++)
     {
         ServerWorkerPtr worker(new CServerWorker(this));
+        worker->Start();
         m_hWorkerThreads.push_back(worker);
     }
 
