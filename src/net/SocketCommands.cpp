@@ -6,67 +6,48 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "socketcommands.h"
+#include "SocketCommands.h"
 
 
 
 CSocketCommands::CSocketCommands(void)
 {
-	InitializeCriticalSection(&m_CriticalSectionCommans);
-	m_hWait = CreateEvent(NULL,FALSE,FALSE,0);
-	m_bWait = false;
 }
 
 CSocketCommands::~CSocketCommands(void)
 {
 	Clear();
-	DeleteCriticalSection(&m_CriticalSectionCommans);
-	CloseHandle(m_hWait);
 }
 
 
 // 压入命令到队列后段
-bool CSocketCommands::Push_Back(tagSocketOper* pCommand)
+bool CSocketCommands::PushBack(tagSocketOper* cmd)
 {
-	if(NULL == pCommand)	return false;
-
-	EnterCriticalSection(&m_CriticalSectionCommans);
-	if(m_Commands.size() == 0)
-		SetEvent(m_hWait);
-	m_Commands.push_back(pCommand);
-	LeaveCriticalSection(&m_CriticalSectionCommans);
-
+    if (cmd)
+    {
+        std::lock_guard<std::mutex> guard(mutex_);
+        commands_.push_back(cmd);
+        return true;
+    }
 	return false;
 }
 
 // 得到命令队列长度
-long CSocketCommands::GetSize()
+size_t CSocketCommands::GetSize()
 {
-	EnterCriticalSection(&m_CriticalSectionCommans);
-	long lSize = (long)m_Commands.size();
-	LeaveCriticalSection(&m_CriticalSectionCommans);
-	return lSize;
+    std::lock_guard<std::mutex> guard(mutex_);
+    return commands_.size();
 }
 
 // 清空命令队列
 void CSocketCommands::Clear()
 {
-	EnterCriticalSection(&m_CriticalSectionCommans);
-	m_Commands.clear();
-	LeaveCriticalSection(&m_CriticalSectionCommans);
+    std::lock_guard<std::mutex> guard(mutex_);
+    commands_.clear();
 }
 
-void CSocketCommands::CopyAllCommand(CommandsQueue& TemptCommandsQueue)
+void CSocketCommands::CopyAllCommand(CommandsQueue& tmp)
 {
-	EnterCriticalSection(&m_CriticalSectionCommans);
-	while(m_Commands.size() == 0)
-	{
-		LeaveCriticalSection(&m_CriticalSectionCommans);
-		//等待通知事件
-		WaitForSingleObject(m_hWait,INFINITE);
-		EnterCriticalSection(&m_CriticalSectionCommans);
-	}
-	TemptCommandsQueue = m_Commands;
-	m_Commands.clear();
-	LeaveCriticalSection(&m_CriticalSectionCommans);
+    std::lock_guard<std::mutex> guard(mutex_);
+    tmp.swap(commands_);
 }

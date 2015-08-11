@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <windows.h>
 #include <deque>
+#include <mutex>
 #include "common/DefType.h"
 
-class CServerClient;
+
 
 //对网络操作的类型
 enum eSocketOperaType
@@ -41,69 +41,41 @@ enum eSocketOperaType
 //对socket的操作结构，大小:24Byte
 struct tagSocketOper
 {
-	eSocketOperaType OperaType;
-	uint32_t	 lSocketID;
-	char*			 pStrID;					//字符串ID
+	eSocketOperaType    OperaType;
+	uint32_t	        lSocketID = 0;
+	char*		        pStrID = nullptr;		//字符串ID
+	void*			    pBuf = nullptr;			//操作的内容
+	int32_t			    lNum1 = 0;				//备用值1
+	int32_t			    lNum2 = 0;				//备用值1
 
-	void*			 pBuf;						//操作的内容
-	long			 lNum1;						//备用值1
-	long			 lNum2;						//备用值1
-	//CServerClient*	 pServerClient;			//客户端套接字
-	
-	tagSocketOper(){}
 
-	tagSocketOper(eSocketOperaType eOperType,uint32_t lID,void* pTemptBuf,
-		long lNumber1,long lNumber2=0)
-		:OperaType(eOperType)
-		,lSocketID(lID)
-		,pStrID(NULL)
-		,pBuf(pTemptBuf)
-		,lNum1(lNumber1)
-		,lNum2(lNumber2)
+    void Init(eSocketOperaType type, uint32_t lID, void* buf, 
+              uint32_t num1 = 0, uint32_t num2 = 0)
 	{
+		OperaType = type;
+        lSocketID = lID;
+        pBuf = buf;
+        lNum1 = num1; 
+        lNum2 = num2;
 	}
 
-
-	tagSocketOper(eSocketOperaType eOperType,uint32_t lID,char* pBufID,void* pTemptBuf,
-		long lNumber1,long lNumber2=0)
-		:OperaType(eOperType)
-		,lSocketID(lID)
-		,pStrID(pBufID)
-		,pBuf(pTemptBuf)
-		,lNum1(lNumber1)
-		,lNum2(lNumber2)
-	{
-	}
-
-	void Init(eSocketOperaType eOperType,uint32_t lID,void* pTemptBuf,
-		long lNumber1 = 0,long lNumber2=0)
-	{
-		OperaType = eOperType;lSocketID = lID;pBuf=pTemptBuf;
-		lNum1 = lNumber1;lNum2 = lNumber2;
-	}
 };
 
 typedef std::deque<tagSocketOper*> CommandsQueue;
 
 //此类的消费线程只能有一个
-
 class CSocketCommands
 {
-private:
-	CommandsQueue	 m_Commands;				//命令操作队列
-	CRITICAL_SECTION m_CriticalSectionCommans;
-	//是否有线程等待
-	bool	m_bWait;
-	//当队列为空的时候,相应线程的等待事件同志
-	HANDLE	m_hWait;
 public:
-	CSocketCommands(void);
-	~CSocketCommands(void);
+	CSocketCommands();
+	~CSocketCommands();
 
-	bool Push_Back(tagSocketOper* pCommand);	// 压入命令到队列后段
+	bool    PushBack(tagSocketOper* cmd);	// 压入命令到队列后段
+	size_t  GetSize();						// 得到命令队列长度
+	void    Clear();						// 清空命令队列]
+	void    CopyAllCommand(CommandsQueue& tmp);
 
-	long GetSize();								// 得到命令队列长度
-	void Clear();								// 清空命令队列]
-
-	void CopyAllCommand(CommandsQueue& TemptCommandsQueue);
+private:
+    CommandsQueue	commands_;				//命令操作队列
+    std::mutex      mutex_;
 };
